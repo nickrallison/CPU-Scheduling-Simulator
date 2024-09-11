@@ -9,7 +9,7 @@ cmake_minimum_required(VERSION 3.15...3.30)
 project(
   CPSC457A1
   VERSION 1.0
-  LANGUAGES CXX
+  LANGUAGES C
 )
 
 # If you set any CMAKE_ variables, that can go here.
