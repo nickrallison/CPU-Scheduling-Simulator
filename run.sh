@@ -3,7 +3,7 @@
 set -e # exit on error
 
 mkdir -p build
-cd build
+pushd build
 
 export ninja_installed=$(which ninja)
 if [ -n "$ninja_installed" ]; then
@@ -19,5 +19,5 @@ else
     cmake ..
     make
 fi
-
-./main
+popd
+./build/src/scheduler/scheduler FCFS < cpsca1input.csv
