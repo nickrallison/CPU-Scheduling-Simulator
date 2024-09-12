@@ -32,7 +32,7 @@ pid_records_t pid_records_new() {
     return pid_records;
 }
 
-int pid_records_append(pid_records_t* self, pid_record_t pid_record) {
+int pid_records_append(pid_records_t* self, const pid_record_t pid_record) {
     if (self->size == self->capacity - 1) {
         // malloc an array with double the space
         self->capacity *= 2;
@@ -53,7 +53,7 @@ int pid_records_append(pid_records_t* self, pid_record_t pid_record) {
     return 0;
 }
 
-int pid_records_print(pid_records_t* self) {
+int pid_records_print(const pid_records_t* self) {
     for (int i = 0; i < self->size; i++) {
         printf("PID: %d, Arrival: %d, Time Until First Response: %d, Actual CPU Burst: %d\n", self->pid_records[i].pid, self->pid_records[i].arrival_time, self->pid_records[i].time_until_first_response, self->pid_records[i].actual_cpu_burst);
     }
@@ -61,7 +61,7 @@ int pid_records_print(pid_records_t* self) {
 }
 
 // used CLRS partition function as a reference (page 184 on 4th ed)
-int pid_records_partition(pid_records_t* self, int (*get_value)(pid_record_t* pid_record), uint32_t lower, uint32_t upper) {
+int pid_records_partition(const pid_records_t* self, int (*get_value)(pid_record_t* pid_record), uint32_t lower, uint32_t upper) {
 
 
     const int p = lower;
@@ -90,10 +90,7 @@ int pid_records_partition(pid_records_t* self, int (*get_value)(pid_record_t* pi
 int pid_records_sort_inner(pid_records_t* self, int (*get_value)(pid_record_t* pid_record), uint32_t lower, uint32_t upper) {
 
     if (lower < upper) {
-        if (upper == 2) {
-            printf("lower: %d, upper: %d\n", lower, upper);
-        }
-        uint32_t pivot = pid_records_partition(self, get_value, lower, upper);
+        const uint32_t pivot = pid_records_partition(self, get_value, lower, upper);
         pid_records_sort_inner(self, get_value, lower, pivot);
         pid_records_sort_inner(self, get_value, pivot + 1, upper);
 
