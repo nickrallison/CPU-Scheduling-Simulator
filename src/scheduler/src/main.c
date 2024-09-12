@@ -4,6 +4,10 @@
 #include <stdio.h>
 #include <string.h>
 
+int fcfs_value(pid_record_t* pid_record) {
+    return pid_record->arrival_time;
+}
+
 int main(int argc, char* argv[]) {
     // Checking if the number of arguments is correct
     if (argc != 2) {
@@ -37,6 +41,11 @@ int main(int argc, char* argv[]) {
     }
 
     pid_records_t pid_records = create_pid_records();
+    pid_records_print(&pid_records);
+    // sort by arrival time
+    pid_records_sort_by(&pid_records, &fcfs_value);
+
+
     pid_records_print(&pid_records);
     return 0;
 }

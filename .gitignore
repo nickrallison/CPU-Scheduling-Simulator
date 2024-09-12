@@ -1,9 +1,11 @@
 
 # Build Folder
 build
+cmake-build-*
 
 # clangd
 .cache
 
 # VSCode
 .vscode
+.idea
