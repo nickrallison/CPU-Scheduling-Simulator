@@ -60,51 +60,6 @@ int pid_records_print(const pid_records_t* self) {
     return 0;
 }
 
-// used CLRS partition function as a reference (page 184 on 4th ed)
-int pid_records_partition(const pid_records_t* self, int (*get_value)(pid_record_t* pid_record), uint32_t lower, uint32_t upper) {
-
-
-    const int p = lower;
-    const int r = upper;
-    const int x = get_value(&self->pid_records[r]);
-    int i = p - 1;
-
-    for (int j = p; j < r - 1; j++) {
-        if (get_value(&self->pid_records[j]) <= x) {
-            i++;
-            // swap A[i] with A[j]
-            pid_record_t temp = self->pid_records[i];
-            self->pid_records[i] = self->pid_records[j];
-            self->pid_records[j] = temp;
-        }
-    }
-    // swap A[i + 1] with A[r]
-    pid_record_t temp = self->pid_records[i + 1];
-    self->pid_records[i + 1] = self->pid_records[r];
-    self->pid_records[r] = temp;
-    return i + 1;
-}
-
-// uses quicksort as an inner wrapper to sort pid_records
-// used CLRS as a reference again
-int pid_records_sort_inner(pid_records_t* self, int (*get_value)(pid_record_t* pid_record), uint32_t lower, uint32_t upper) {
-
-    if (lower < upper) {
-        const uint32_t pivot = pid_records_partition(self, get_value, lower, upper);
-        pid_records_sort_inner(self, get_value, lower, pivot);
-        pid_records_sort_inner(self, get_value, pivot + 1, upper);
-
-    }
-    return 0;
-}
-
-// Sorts by some arbitrary value as found by the function pointer "get_value"
-int pid_records_sort_by(pid_records_t* self, int (*get_value)(pid_record_t* pid_record)) {
-
-    pid_records_sort_inner(self, get_value, 0, self->size - 1);
-    return 0;
-}
-
 pid_records_t create_pid_records() {
     uint16_t pid;
     uint16_t arrival_time;

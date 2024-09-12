@@ -2,10 +2,14 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-int fcfs_value(pid_record_t* pid_record) {
-    return pid_record->arrival_time;
+int fcfs_comp(const void* first, const void* second) {
+    // time_until_first_response
+    pid_record_t* first_pid_record = (pid_record_t*) first;
+    pid_record_t* second_pid_record = (pid_record_t*) second;
+    return first_pid_record->arrival_time - second_pid_record->arrival_time;
 }
 
 int main(int argc, char* argv[]) {
@@ -41,10 +45,9 @@ int main(int argc, char* argv[]) {
     }
 
     pid_records_t pid_records = create_pid_records();
-    pid_records_print(&pid_records);
+    // pid_records_print(&pid_records);
     // sort by arrival time
-    pid_records_sort_by(&pid_records, &fcfs_value);
-
+    qsort(pid_records.pid_records, pid_records.size, sizeof(pid_record_t), fcfs_comp);
 
     pid_records_print(&pid_records);
     return 0;
