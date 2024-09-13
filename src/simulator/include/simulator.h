@@ -26,6 +26,7 @@ int process_queue_add(process_queue_t *process_queue, pid_record_t process);
 /// @brief A struct to store the simulator
 typedef struct simulator_t {
     uint32_t current_time;
+    int current_index;
 
     uint8_t has_current_process;
     pid_record_t current_process_option;

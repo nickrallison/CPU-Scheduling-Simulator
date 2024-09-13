@@ -45,7 +45,7 @@ pid_record_t process_queue_pop(process_queue_t *process_queue) {
 simulator_t simulator_new(pid_records_t pid_records,
                           int (*compare)(const void *, const void *)) {
   uint32_t current_time = 0;
-
+  int current_index = 0;
   uint8_t has_current_process = 0;
   pid_record_t current_process_option = {0, 0, 0, 0, 0};
 
@@ -58,9 +58,10 @@ simulator_t simulator_new(pid_records_t pid_records,
   pid_completion_records_t pid_completion_records =
       pid_completion_records_new();
 
-  simulator_t simulator = {current_time,           has_current_process,
-                           current_process_option, pid_records_in_order,
-                           process_queue,          pid_completion_records};
+  simulator_t simulator = {current_time,          current_index,
+                           has_current_process,   current_process_option,
+                           pid_records_in_order,  process_queue,
+                           pid_completion_records};
   return simulator;
 }
 
@@ -74,26 +75,25 @@ simulator_t simulator_new(pid_records_t pid_records,
 
 int simulator_time_step(simulator_t *simulator) {
   // 1. if another process is ready to run, add it to the process queue
-  for (int i = 0; i < simulator->pid_records_in_order.size; i++) {
-    if (simulator->pid_records_in_order.pid_records[i].arrival_time ==
-        simulator->current_time) {
-      process_queue_add(&simulator->process_queue,
-                        simulator->pid_records_in_order.pid_records[i]);
-    } else if (simulator->pid_records_in_order.pid_records[i].arrival_time >
-               simulator->current_time) {
-      break;
-    }
+  // using the current index to keep track of the next process to add
+  while (simulator->current_index < simulator->pid_records_in_order.size &&
+         simulator->pid_records_in_order.pid_records[simulator->current_index]
+                 .arrival_time == simulator->current_time) {
+    process_queue_add(&simulator->process_queue,
+                      simulator->pid_records_in_order
+                          .pid_records[simulator->current_index]);
+    simulator->current_index++;
   }
 
   // 2. if using preemptive scheduling, check if the current process should be
   // added back to the process queue
-  if (simulator->has_current_process) {
-    if (simulator->current_process_option.time_until_first_response == 0) {
-      process_queue_add(&simulator->process_queue,
-                        simulator->current_process_option);
-      simulator->has_current_process = 0;
-    }
-  }
+  // if (simulator->has_current_process) {
+  //   if (simulator->current_process_option.time_until_first_response == 0) {
+  //     process_queue_add(&simulator->process_queue,
+  //                       simulator->current_process_option);
+  //     simulator->has_current_process = 0;
+  //   }
+  // }
 
   // 3. if no process is running, get the next process from the process queue
   if (!simulator->has_current_process) {

@@ -12,7 +12,7 @@ pid_record_t pid_record_new(uint16_t pid, uint16_t arrival_time,
   uint16_t initial_time_until_first_response = time_until_first_response;
   pid_record_t pid_record = {pid, arrival_time,
                              initial_time_until_first_response,
-                             time_until_first_response, actual_cpu_burst};
+                             actual_cpu_burst, actual_cpu_burst};
   return pid_record;
 }
 
