@@ -78,3 +78,8 @@ pid_records_t create_pid_records() {
     }
     return pid_records;
 }
+
+int pid_records_sort_by(pid_records_t* self, int (*compare)(const void *, const void *)) {
+    qsort(self->pid_records, self->size, sizeof(pid_record_t), compare);
+    return 0;
+}

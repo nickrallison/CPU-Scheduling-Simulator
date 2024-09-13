@@ -27,7 +27,7 @@ typedef struct pid_records_t {
 pid_records_t pid_records_new();
 int pid_records_append(pid_records_t* self, pid_record_t pid_record);
 int pid_records_print(const pid_records_t* self);
-int pid_records_sort_by(pid_records_t* self, int (*get_value)(pid_record_t* pid_records));
+int pid_records_sort_by(pid_records_t* self, int (*compare)(const void *, const void *));
 
 // creates from stdin file
 pid_records_t create_pid_records();
