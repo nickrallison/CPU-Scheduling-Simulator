@@ -47,7 +47,7 @@ simulator_t simulator_new(pid_records_t pid_records,
   uint32_t current_time = 0;
 
   uint8_t has_current_process = 0;
-  pid_record_t current_process_option = {0, 0, 0, 0};
+  pid_record_t current_process_option = {0, 0, 0, 0, 0};
 
   pid_records_t pid_records_in_order = pid_records;
   pid_records_sort_by(&pid_records_in_order, &pid_record_compare_arrival_time);
@@ -105,11 +105,11 @@ int simulator_time_step(simulator_t *simulator) {
   }
 
   // 4. run the process for one time step
-  // ...?
+  simulator->current_process_option.running_cpu_burst--;
 
   // 5. if the process is done, add it to the completion records
   if (simulator->has_current_process &&
-      simulator->current_process_option.time_until_first_response == 0) {
+      simulator->current_process_option.running_cpu_burst == 0) {
     pid_completion_record_t pid_completion_record = pid_completion_record_new(
         simulator->current_process_option.pid,
         simulator->current_process_option.arrival_time,
@@ -126,4 +126,10 @@ int simulator_time_step(simulator_t *simulator) {
   return 0;
 }
 
-// pid_completion_records_t* simulator_run(simulator_t *simulator);
+pid_completion_records_t *simulator_run(simulator_t *simulator) {
+  while (simulator->pid_completion_records.size <
+         simulator->pid_records_in_order.size) {
+    simulator_time_step(simulator);
+  }
+  return &simulator->pid_completion_records;
+}
