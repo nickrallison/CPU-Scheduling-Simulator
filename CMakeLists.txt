@@ -15,3 +15,5 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Subdirectories for cmake
 add_subdirectory(src/scheduler)
+add_subdirectory(src/process)
+add_subdirectory(src/simulator)

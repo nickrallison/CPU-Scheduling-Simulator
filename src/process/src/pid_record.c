@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// #include "string_t.h"
-
 
 pid_record_t pid_record_new(uint16_t pid, uint16_t arrival_time, uint16_t time_until_first_response, uint16_t actual_cpu_burst) {
 

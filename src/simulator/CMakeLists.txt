@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.15...3.30)
 # This is your project statement. You should always list languages;
 # Listing the version is nice here since it sets lots of useful variables
 project(
-  scheduler
+  simulator
   VERSION 1.0
   LANGUAGES C
 )
@@ -28,9 +28,14 @@ project(
 # Link each target with other targets or add options, etc.
 
 # Adding something we can run - Output name matches target name
+add_library(${PROJECT_NAME}
+  src/simulator.c
+)
 
-add_executable(${PROJECT_NAME}
-  src/main.c
+# add include directories
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
 )
 
 # Make sure you link your targets with this command. It can also link libraries and
@@ -38,5 +43,4 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} 
   PRIVATE
     process
-    simulator
 )

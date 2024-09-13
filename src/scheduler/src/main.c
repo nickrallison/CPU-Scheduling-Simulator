@@ -6,7 +6,6 @@
 #include <string.h>
 
 int fcfs_comp(const void* first, const void* second) {
-    // time_until_first_response
     pid_record_t* first_pid_record = (pid_record_t*) first;
     pid_record_t* second_pid_record = (pid_record_t*) second;
     return first_pid_record->arrival_time - second_pid_record->arrival_time;

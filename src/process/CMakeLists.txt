@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.15...3.30)
 # This is your project statement. You should always list languages;
 # Listing the version is nice here since it sets lots of useful variables
 project(
-  scheduler
+  process
   VERSION 1.0
   LANGUAGES C
 )
@@ -28,15 +28,18 @@ project(
 # Link each target with other targets or add options, etc.
 
 # Adding something we can run - Output name matches target name
+add_library(${PROJECT_NAME}
+  src/pid_record.c
+  include/pid_record.h
 
-add_executable(${PROJECT_NAME}
-  src/main.c
+)
+
+# add include directories
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
+    ${PROJECT_SOURCE_DIR}/include
 )
 
 # Make sure you link your targets with this command. It can also link libraries and
 # even flags, so linking a target that does not exist will not give a configure-time error.
-target_link_libraries(${PROJECT_NAME} 
-  PRIVATE
-    process
-    simulator
-)
+# target_link_libraries(MyExample PRIVATE MyLibExample)
