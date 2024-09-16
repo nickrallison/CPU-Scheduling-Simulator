@@ -107,7 +107,7 @@ int pid_records_sort_by(pid_records_t *self,
 pid_completion_record_t
 pid_completion_record_new(uint16_t pid, uint16_t arrival_time,
                           uint16_t time_until_first_response,
-                          uint16_t actual_cpu_burst, uint16_t completion_time) {
+                          uint16_t actual_cpu_burst, uint32_t completion_time) {
   pid_completion_record_t pid_completion_record = {
       pid, arrival_time, time_until_first_response, actual_cpu_burst,
       completion_time};

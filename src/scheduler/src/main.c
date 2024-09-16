@@ -12,6 +12,12 @@ int fcfs_comp(const void *first, const void *second) {
   return first_pid_record->arrival_time - second_pid_record->arrival_time;
 }
 
+int sjn_comp(const void *first, const void *second) {
+  pid_record_t *first_pid_record = (pid_record_t *)first;
+  pid_record_t *second_pid_record = (pid_record_t *)second;
+  return first_pid_record->actual_cpu_burst- second_pid_record->actual_cpu_burst;
+}
+
 int main(int argc, char *argv[]) {
   // Checking if the number of arguments is correct
   if (argc != 2) {
@@ -54,7 +60,9 @@ int main(int argc, char *argv[]) {
   simulator_t simulator;
   if (algorithm_chosen == 0) {
     simulator = simulator_new(pid_records, &fcfs_comp);
-  } else {
+  } else if (algorithm_chosen == 1) {
+    simulator = simulator_new(pid_records, &sjn_comp);
+  }else {
     fprintf(stderr,"Simulator could not be created\n");
     exit(1);
   }

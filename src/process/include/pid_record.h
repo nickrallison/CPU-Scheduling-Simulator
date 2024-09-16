@@ -40,11 +40,11 @@ typedef struct pid_completion_record_t {
     uint16_t time_until_first_response;
     uint16_t actual_cpu_burst;
     // ###################
-    uint16_t completion_time;
+    uint32_t completion_time;
     
 } pid_completion_record_t;
 
-pid_completion_record_t pid_completion_record_new(uint16_t pid, uint16_t arrival_time, uint16_t time_until_first_response, uint16_t actual_cpu_burst, uint16_t completion_time);
+pid_completion_record_t pid_completion_record_new(uint16_t pid, uint16_t arrival_time, uint16_t time_until_first_response, uint16_t actual_cpu_burst, uint32_t completion_time);
 int pid_completion_record_print(pid_completion_record_t* self);
 
 typedef struct pid_completion_records_t {
