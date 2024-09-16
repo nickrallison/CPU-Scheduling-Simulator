@@ -81,13 +81,15 @@ pid_records_t create_pid_records() {
   pid_records_t pid_records = pid_records_new();
 
   // get rid of the first line
-  char *line = NULL;
-  size_t len = 0;
-  getline(&line, &len, stdin);
+  char *first_line_char = malloc(sizeof(char));
+  *first_line_char = '\0';
+  while (*first_line_char != '\n' ) {
+    *first_line_char = getchar();
+  }
 
-  while (getline(&line, &len, stdin) != -1) {
-    sscanf(line, "%hd,%hd,%hd,%hd\n", &pid, &arrival_time,
-           &time_until_first_response, &actual_cpu_burst);
+  // Reads stdin line by line and creates a pid_record_t for each line
+  while (scanf("%hd,%hd,%hd,%hd\n", &pid, &arrival_time,
+               &time_until_first_response, &actual_cpu_burst) != EOF) {
     pid_record_t pid_record = pid_record_new(
         pid, arrival_time, time_until_first_response, actual_cpu_burst);
     pid_records_append(&pid_records, pid_record);

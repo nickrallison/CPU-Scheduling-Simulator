@@ -49,11 +49,17 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "%s\n", scheduling_algorithms[i]);
     return 1;
   }
-
   pid_records_t pid_records = create_pid_records();
-  simulator_t fcfs_simulator = simulator_new(pid_records, &fcfs_comp);
-  pid_completion_records_t *pid_completion_records =
-      simulator_run(&fcfs_simulator);
+
+  simulator_t simulator;
+  if (algorithm_chosen == 0) {
+    simulator = simulator_new(pid_records, &fcfs_comp);
+  } else {
+    fprintf(stderr,"Simulator could not be created\n");
+    exit(1);
+  }
+
+  const pid_completion_records_t *pid_completion_records = simulator_run(&simulator);
   pid_completion_records_print(pid_completion_records);
   return 0;
 }
