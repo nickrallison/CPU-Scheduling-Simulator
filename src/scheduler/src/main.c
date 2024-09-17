@@ -65,17 +65,17 @@ int main(int argc, char *argv[]) {
 
   simulator_t simulator;
   if (algorithm_chosen == 0) {
-    simulator = simulator_new(pid_records, &fcfs_comp, 0);
+    simulator = simulator_new(&pid_records, &fcfs_comp, 0);
   } else if (algorithm_chosen == 1) {
-    simulator = simulator_new(pid_records, &sjn_comp, 0);
+    simulator = simulator_new(&pid_records, &sjn_comp, 0);
   } else if (algorithm_chosen == 2) {
-    simulator = simulator_new(pid_records, &rr_comp, 1);
+    simulator = simulator_new(&pid_records, &rr_comp, 1);
   } else {
     fprintf(stderr,"Simulator could not be created\n");
     exit(1);
   }
 
-  const pid_completion_records_t *pid_completion_records = simulator_run(&simulator);
-  pid_completion_records_print(pid_completion_records);
+simulator_run(&simulator);
+  pid_records_print(&pid_records);
   return 0;
 }

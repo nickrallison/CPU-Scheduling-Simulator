@@ -24,7 +24,7 @@ int process_queue_add(process_queue_t *process_queue, pid_record_t process);
 
 /// @brief A struct to store the simulator
 typedef struct simulator_t {
-    uint8_t preemptive;
+    uint32_t time_quantum;
 
     uint32_t current_time;
     int current_index;
@@ -36,13 +36,14 @@ typedef struct simulator_t {
 
     process_queue_t process_queue;
 
-    pid_completion_records_t pid_completion_records;
+    pid_records_t pid_completion_records;
+    uint16_t jobs_remaining;
 } simulator_t;
 
-simulator_t simulator_new(pid_records_t pid_records,
+simulator_t simulator_new(pid_records_t* pid_records,
                           int (*compare)(const void *, const void *), uint8_t preemptive);
 
-pid_completion_records_t *simulator_run(simulator_t *simulator);
+int *simulator_run(simulator_t *simulator);
 
 
 #endif // SIMULATOR_H

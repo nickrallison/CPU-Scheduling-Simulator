@@ -108,79 +108,79 @@ int pid_records_sort_by(pid_records_t *self,
 }
 
 // ##### PID COMPLETION RECORD #####
-pid_completion_record_t
-pid_completion_record_new(uint16_t pid, uint16_t arrival_time,
-                          uint16_t time_until_first_response,
-                          uint16_t actual_cpu_burst, uint32_t completion_time) {
-    pid_completion_record_t pid_completion_record = {
-        pid, arrival_time, time_until_first_response, actual_cpu_burst,
-        completion_time
-    };
-    return pid_completion_record;
-}
-
-int pid_completion_record_print(pid_completion_record_t *self) {
-    printf("PID: %hd, Arrival: %hd, Time Until First Response: %hd, Actual CPU "
-           "Burst: %hd\n",
-           self->pid, self->arrival_time, self->time_until_first_response,
-           self->actual_cpu_burst);
-    return 0;
-}
-
-// ##### PID COMPLETION RECORDS CONTAINER #####
-pid_completion_records_t pid_completion_records_new() {
-    uint32_t size = 0;
-    uint32_t capacity = 32;
-    pid_completion_record_t *records_array = (pid_completion_record_t *) malloc(
-        capacity * sizeof(pid_completion_record_t));
-    pid_completion_records_t pid_completion_records = {
-        size, capacity,
-        records_array
-    };
-    return pid_completion_records;
-}
-
-int pid_completion_records_append(
-    pid_completion_records_t *self,
-    const pid_completion_record_t pid_completion_record) {
-    if (self->size == self->capacity - 1) {
-        // malloc an array with double the space
-        self->capacity *= 2;
-        pid_completion_record_t *new_buffer = (pid_completion_record_t *) malloc(
-            self->capacity * sizeof(pid_completion_record_t));
-
-        // copy the elements
-        memcpy(new_buffer, self->completion_records,
-               self->size * sizeof(pid_completion_record_t));
-
-        // free the old array
-        free(self->completion_records);
-
-        // copy the new buffer to self->completion_records
-        self->completion_records = new_buffer;
-    }
-
-    self->completion_records[self->size] = pid_completion_record;
-    self->size++;
-    return 0;
-}
-
-int pid_completion_records_print(const pid_completion_records_t *self) {
-    for (int i = 0; i < self->size; i++) {
-        printf("PID: %d, Arrival: %d, Time Until First Response: %d, Actual CPU "
-               "Burst: %d, Completion Time: %d\n",
-               self->completion_records[i].pid,
-               self->completion_records[i].arrival_time,
-               self->completion_records[i].time_until_first_response,
-               self->completion_records[i].actual_cpu_burst,
-               self->completion_records[i].completion_time);
-    }
-    return 0;
-}
-
-int pid_completion_records_sort_by(pid_completion_records_t *self,
-                                   int (*compare)(const void *, const void *)) {
-    qsort(self->completion_records, self->size, sizeof(pid_completion_record_t),
-          compare);
-    return 0;
-}
+// pid_record_t
+// pid_completion_record_new(uint16_t pid, uint16_t arrival_time,
+//                           uint16_t time_until_first_response,
+//                           uint16_t actual_cpu_burst, uint32_t completion_time) {
+//     pid_record_t pid_completion_record = {
+//         pid, arrival_time, time_until_first_response, actual_cpu_burst,
+//         completion_time
+//     };
+//     return pid_completion_record;
+// }
+//
+// int pid_completion_record_print(pid_completion_record_t *self) {
+//     printf("PID: %hd, Arrival: %hd, Time Until First Response: %hd, Actual CPU "
+//            "Burst: %hd\n",
+//            self->pid, self->arrival_time, self->time_until_first_response,
+//            self->actual_cpu_burst);
+//     return 0;
+// }
+//
+// // ##### PID COMPLETION RECORDS CONTAINER #####
+// pid_completion_records_t pid_completion_records_new() {
+//     uint32_t size = 0;
+//     uint32_t capacity = 32;
+//     pid_completion_record_t *records_array = (pid_completion_record_t *) malloc(
+//         capacity * sizeof(pid_completion_record_t));
+//     pid_completion_records_t pid_completion_records = {
+//         size, capacity,
+//         records_array
+//     };
+//     return pid_completion_records;
+// }
+//
+// int pid_completion_records_append(
+//     pid_completion_records_t *self,
+//     const pid_completion_record_t pid_completion_record) {
+//     if (self->size == self->capacity - 1) {
+//         // malloc an array with double the space
+//         self->capacity *= 2;
+//         pid_completion_record_t *new_buffer = (pid_completion_record_t *) malloc(
+//             self->capacity * sizeof(pid_completion_record_t));
+//
+//         // copy the elements
+//         memcpy(new_buffer, self->completion_records,
+//                self->size * sizeof(pid_completion_record_t));
+//
+//         // free the old array
+//         free(self->completion_records);
+//
+//         // copy the new buffer to self->completion_records
+//         self->completion_records = new_buffer;
+//     }
+//
+//     self->completion_records[self->size] = pid_completion_record;
+//     self->size++;
+//     return 0;
+// }
+//
+// int pid_completion_records_print(const pid_completion_records_t *self) {
+//     for (int i = 0; i < self->size; i++) {
+//         printf("PID: %d, Arrival: %d, Time Until First Response: %d, Actual CPU "
+//                "Burst: %d, Completion Time: %d\n",
+//                self->completion_records[i].pid,
+//                self->completion_records[i].arrival_time,
+//                self->completion_records[i].time_until_first_response,
+//                self->completion_records[i].actual_cpu_burst,
+//                self->completion_records[i].completion_time);
+//     }
+//     return 0;
+// }
+//
+// int pid_completion_records_sort_by(pid_completion_records_t *self,
+//                                    int (*compare)(const void *, const void *)) {
+//     qsort(self->completion_records, self->size, sizeof(pid_completion_record_t),
+//           compare);
+//     return 0;
+// }

@@ -27,28 +27,30 @@ pid_record_t process_queue_pop(process_queue_t *process_queue) {
 }
 
 // #### SIMULATOR ####
-simulator_t simulator_new(pid_records_t pid_records,
-                          int (*compare)(const void *, const void *), uint8_t preemptive) {
+simulator_t simulator_new(pid_records_t* pid_records,
+                          int (*compare)(const void *, const void *), uint8_t preempt_time) {
     uint32_t current_time = 0;
     int current_index = 0;
     uint8_t has_current_process = 0;
     pid_record_t current_process_option = {0, 0, 0, 0, 0};
 
-    pid_records_t pid_records_in_order = pid_records;
+    pid_records_t pid_records_in_order = *pid_records;
     pid_records_sort_by(&pid_records_in_order, &pid_record_compare_arrival_time);
 
     pid_records_t empty_pid_records = pid_records_new();
     process_queue_t process_queue = {compare, empty_pid_records};
 
-    pid_completion_records_t pid_completion_records =
-            pid_completion_records_new();
-
+    pid_records_t pid_completion_records =
+            pid_records_new();
+    uint32_t time_quantum = 0;
+    uint16_t jobs_remaining = pid_records_in_order.size;
     simulator_t simulator = {
-        preemptive,
+        time_quantum,
         current_time, current_index,
         has_current_process, current_process_option,
         pid_records_in_order, process_queue,
-        pid_completion_records
+        pid_completion_records,
+        jobs_remaining
     };
     return simulator;
 }
@@ -75,7 +77,7 @@ int simulator_time_step(simulator_t *simulator) {
 
     // 2. if using preemptive scheduling, check if the current process should be
     // added back to the process queue
-    if (simulator->preemptive && simulator->has_current_process &&
+    if (simulator->time_quantum && simulator->has_current_process &&
         simulator->current_process_option.running_cpu_burst > 0) {
         process_queue_add(&simulator->process_queue,
                           simulator->current_process_option);
@@ -98,27 +100,28 @@ int simulator_time_step(simulator_t *simulator) {
 
     // 5. if the process is done, add it to the completion records
     if (simulator->has_current_process &&
+        simulator->current_process_option.running_time_until_first_response == 0) {
+        simulator->current_process_option.first_response_time = simulator->current_time;
+        simulator->jobs_remaining--;
+    }
+
+    // 6. if the process is done, add it to the completion records
+    if (simulator->has_current_process &&
         simulator->current_process_option.running_cpu_burst == 0) {
-        pid_completion_record_t pid_completion_record = pid_completion_record_new(
-            simulator->current_process_option.pid,
-            simulator->current_process_option.arrival_time,
-            simulator->current_process_option.time_until_first_response,
-            simulator->current_process_option.actual_cpu_burst,
-            simulator->current_time + 1);
-        pid_completion_records_append(&simulator->pid_completion_records,
-                                      pid_completion_record);
+        simulator->current_process_option.completion_time = simulator->current_time;
         simulator->has_current_process = 0;
     }
 
-    // 6. increment the current time
+    // 7. increment the current time
     simulator->current_time++;
     return 0;
 }
 
-pid_completion_records_t *simulator_run(simulator_t *simulator) {
-    while (simulator->pid_completion_records.size <
-           simulator->pid_records_in_order.size) {
+int *simulator_run(simulator_t *simulator) {
+    // this while loop will cause problems if
+    while (simulator->jobs_remaining > 0) {
         simulator_time_step(simulator);
     }
-    return &simulator->pid_completion_records;
+    // return &simulator->pid_completion_records;
+    return 0;
 }
