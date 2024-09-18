@@ -30,17 +30,23 @@ int priority_comp(const void *first, const void *second) {
   return second_pid_record->pid - first_pid_record->pid;
 }
 
+int srt_comp(const void *first, const void *second) {
+  pid_record_t *first_pid_record = (pid_record_t *)first;
+  pid_record_t *second_pid_record = (pid_record_t *)second;
+  return first_pid_record->exp_time_remaining_chart[first_pid_record->pid] - second_pid_record->exp_time_remaining_chart[second_pid_record->pid];
+}
+
 int main(int argc, char *argv[]) {
   // Checking if the number of arguments is correct
   if (argc != 2) {
-    fprintf(stderr, "Usage: %s [FCFS,SJF,Priority,RR] < [inputfile]\n",
+    fprintf(stderr, "Usage: %s [FCFS,SJF,RR,Priority,SRT] < [inputfile]\n",
             argv[0]);
     return 1;
   }
 
   // Finding which scheduling algorithm was chosen
   char *scheduling_algorithm = argv[1];
-  char *scheduling_algorithms[] = {"FCFS", "SJF","RR", "Priority"};
+  char *scheduling_algorithms[] = {"FCFS", "SJF","RR", "Priority", "SRT"};
   int num_scheduling_algorithms =
       sizeof(scheduling_algorithms) / sizeof(char *);
   int algorithm_chosen = 0;
@@ -71,13 +77,15 @@ int main(int argc, char *argv[]) {
 
   simulator_t simulator;
   if (algorithm_chosen == 0) {
-    simulator = simulator_new(&pid_records, &fcfs_comp, 0);
+    simulator = simulator_new(&pid_records, &fcfs_comp, 0, 0);
   } else if (algorithm_chosen == 1) {
-    simulator = simulator_new(&pid_records, &sjn_comp, 0);
+    simulator = simulator_new(&pid_records, &sjn_comp, 0, 0);
   } else if (algorithm_chosen == 2) {
-    simulator = simulator_new(&pid_records, &rr_comp, 3);
+    simulator = simulator_new(&pid_records, &rr_comp, 3, 0);
   } else if (algorithm_chosen == 3) {
-    simulator = simulator_new(&pid_records, &priority_comp, 1);
+    simulator = simulator_new(&pid_records, &priority_comp, 1, 0);
+  } else if (algorithm_chosen == 4) {
+    simulator = simulator_new(&pid_records, &srt_comp, 1, 0.1);
   } else {
     fprintf(stderr,"Simulator could not be created\n");
     exit(1);

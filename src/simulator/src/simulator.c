@@ -2,6 +2,7 @@
 #include "pid_record.h"
 
 #include <stdint.h>
+#include <stdlib.h>
 
 // #### PROCESS QUEUE ####
 int process_queue_new(pid_records_t pid_records,
@@ -28,7 +29,7 @@ pid_record_t process_queue_pop(process_queue_t *process_queue) {
 
 // #### SIMULATOR ####
 simulator_t simulator_new(pid_records_t* pid_records,
-                          int (*compare)(const void *, const void *), uint32_t time_quantum) {
+                          int (*compare)(const void *, const void *), uint32_t time_quantum, float alpha) {
     uint32_t current_time = 0;
     int current_index = 0;
     uint8_t has_current_process = 0;
@@ -44,6 +45,16 @@ simulator_t simulator_new(pid_records_t* pid_records,
             pid_records_new();
     uint16_t jobs_remaining = pid_records_in_order.size;
     uint32_t time_quantum_remaining = time_quantum;
+    uint32_t* exp_time_remaining_estimate = malloc(51 * sizeof(uint32_t));
+
+    for (int i = 0; i < 51; i++) {
+        exp_time_remaining_estimate[i] = 10;
+    }
+
+    for (int i = 0; i < pid_records_in_order.size; i++) {
+        pid_records_in_order.pid_records[i].exp_time_remaining_chart = exp_time_remaining_estimate;
+    }
+
     simulator_t simulator = {
         time_quantum,
         current_time, current_index,
@@ -51,7 +62,9 @@ simulator_t simulator_new(pid_records_t* pid_records,
         pid_records_in_order, process_queue,
         pid_completion_records,
         jobs_remaining,
-        time_quantum_remaining
+        time_quantum_remaining,
+        exp_time_remaining_estimate,
+        alpha
     };
     return simulator;
 }
@@ -117,8 +130,17 @@ int simulator_time_step(simulator_t *simulator) {
         simulator->current_process_option.completion_time = simulator->current_time + 1;
         simulator->has_current_process = 0;
         simulator->jobs_remaining--;
-        // simulator->pid_completion_records.pid_records[simulator->pid_completion_records.size] =
-        //         simulator->current_process_option;
+
+
+        // tau_n+1 = alpha * t_n + (1 - alpha) * tau_n
+
+
+        // tau_n = simulator->exp_time_remaining_estimate
+        // t_n = simulator->current_process_option.actual_cpu_burst
+        simulator->current_process_option.exp_time_remaining_chart[simulator->current_process_option.pid] =
+                simulator->alpha * simulator->current_process_option.actual_cpu_burst +
+                (1 - simulator->alpha) * simulator->current_process_option.exp_time_remaining_chart[simulator->current_process_option.pid];
+
         pid_records_append(&simulator->pid_completion_records,
                            simulator->current_process_option);
     }

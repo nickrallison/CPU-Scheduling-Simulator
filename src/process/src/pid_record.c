@@ -6,18 +6,34 @@
 #include <string.h>
 
 // ##### PID RECORD #####
+// typedef struct pid_record_t {
+//     uint16_t pid;
+//     uint16_t arrival_time;
+//     uint16_t time_until_first_response;
+//     uint16_t actual_cpu_burst;
+//     // ######
+//     uint16_t running_cpu_burst;
+//     uint16_t running_time_until_first_response;
+//     uint16_t first_response_time;
+//     uint32_t added_to_queue;
+//     uint32_t exp_time_remain;
+//     // ###################
+//     uint32_t completion_time;
+//
+// } pid_record_t;
 pid_record_t pid_record_new(uint16_t pid, uint16_t arrival_time,
                             uint16_t time_until_first_response,
                             uint16_t actual_cpu_burst) {
     uint16_t running_cpu_burst = actual_cpu_burst;
     uint16_t running_time_until_first_response = time_until_first_response;
     uint16_t first_response_time = 0;
+    uint32_t added_to_queue = 0;
+    uint32_t exp_time_remaining = 10;
+    uint32_t completion_time = 0;
     pid_record_t pid_record = {
-        pid, arrival_time, time_until_first_response,
-        actual_cpu_burst, running_cpu_burst,
-        running_time_until_first_response,
-        first_response_time
-    };
+        pid, arrival_time, time_until_first_response, actual_cpu_burst,
+        running_cpu_burst, running_time_until_first_response, first_response_time,
+        added_to_queue, NULL, completion_time};
     return pid_record;
 }
 
