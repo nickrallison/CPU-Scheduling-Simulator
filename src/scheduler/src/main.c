@@ -118,7 +118,7 @@ int main(int argc, char *argv[]) {
   } else if (algorithm_chosen == 2) {
     simulator = simulator_new(&pid_records, &rr_comp, time_quantum, 0);
   } else if (algorithm_chosen == 3) {
-    simulator = simulator_new(&pid_records, &priority_comp, 1, 0);
+    simulator = simulator_new(&pid_records, &priority_comp, 0, 0);
   } else if (algorithm_chosen == 4) {
     simulator = simulator_new(&pid_records, &srt_comp, 1, exp_weight);
   } else {
