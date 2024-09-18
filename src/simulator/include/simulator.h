@@ -37,7 +37,7 @@ typedef struct simulator_t {
     process_queue_t process_queue;
 
     pid_records_t pid_completion_records;
-    uint16_t jobs_remaining;
+    uint32_t jobs_remaining;
     uint32_t time_quantum_remaining;
 
     uint32_t* exp_time_remaining_estimate;

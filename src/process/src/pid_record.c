@@ -7,15 +7,15 @@
 
 // ##### PID RECORD #####
 // typedef struct pid_record_t {
-//     uint16_t pid;
-//     uint16_t arrival_time;
-//     uint16_t time_until_first_response;
-//     uint16_t actual_cpu_burst;
+//     uint32_t pid;
+//     uint32_t arrival_time;
+//     uint32_t time_until_first_response;
+//     uint32_t actual_cpu_burst;
 //     // ######
 //     uint32_t start_time;
-//     uint16_t running_cpu_burst;
-//     uint16_t running_time_until_first_response;
-//     uint16_t first_response_time;
+//     uint32_t running_cpu_burst;
+//     uint32_t running_time_until_first_response;
+//     uint32_t first_response_time;
 //     uint32_t added_to_queue;
 //     uint32_t* exp_time_remaining_chart;
 //
@@ -24,14 +24,14 @@
 //
 //
 // } pid_record_t;
-pid_record_t pid_record_new(uint16_t pid, uint16_t arrival_time,
-                            uint16_t time_until_first_response,
-                            uint16_t actual_cpu_burst) {
+pid_record_t pid_record_new(uint32_t pid, uint32_t arrival_time,
+                            uint32_t time_until_first_response,
+                            uint32_t actual_cpu_burst) {
     uint32_t start_time = 0;
     uint8_t has_started = 0;
-    uint16_t running_cpu_burst = actual_cpu_burst;
-    uint16_t running_time_until_first_response = time_until_first_response;
-    uint16_t first_response_time = 0;
+    uint32_t running_cpu_burst = actual_cpu_burst;
+    uint32_t running_time_until_first_response = time_until_first_response;
+    uint32_t first_response_time = 0;
     uint32_t added_to_queue = 0;
     uint32_t exp_time_remaining = 10;
     uint32_t completion_time = 0;
@@ -98,10 +98,10 @@ int pid_records_print(const pid_records_t *self) {
 }
 
 pid_records_t create_pid_records() {
-    uint16_t pid;
-    uint16_t arrival_time;
-    uint16_t time_until_first_response;
-    uint16_t actual_cpu_burst;
+    uint32_t pid;
+    uint32_t arrival_time;
+    uint32_t time_until_first_response;
+    uint32_t actual_cpu_burst;
 
     pid_records_t pid_records = pid_records_new();
 
@@ -113,7 +113,7 @@ pid_records_t create_pid_records() {
     }
 
     // Reads stdin line by line and creates a pid_record_t for each line
-    while (scanf("%hd,%hd,%hd,%hd\n", &pid, &arrival_time,
+    while (scanf("%d,%d,%d,%d\n", &pid, &arrival_time,
                  &time_until_first_response, &actual_cpu_burst) != EOF) {
         pid_record_t pid_record = pid_record_new(
             pid, arrival_time, time_until_first_response, actual_cpu_burst);
@@ -130,9 +130,9 @@ int pid_records_sort_by(pid_records_t *self,
 
 // ##### PID COMPLETION RECORD #####
 // pid_record_t
-// pid_completion_record_new(uint16_t pid, uint16_t arrival_time,
-//                           uint16_t time_until_first_response,
-//                           uint16_t actual_cpu_burst, uint32_t completion_time) {
+// pid_completion_record_new(uint32_t pid, uint32_t arrival_time,
+//                           uint32_t time_until_first_response,
+//                           uint32_t actual_cpu_burst, uint32_t completion_time) {
 //     pid_record_t pid_completion_record = {
 //         pid, arrival_time, time_until_first_response, actual_cpu_burst,
 //         completion_time
@@ -192,12 +192,12 @@ int pid_completion_records_print(pid_records_t *self) {
     printf("+----+---------+-------+-------+--------+--------+-------------+---------------+\n");
     for (int i = 0; i < self->size; i++) {
         printf("| %2d | %7d | %5d | %5d | %6d | %6d | %11d | %13d |\n",
-               self->pid_records[i].pid, self->pid_records[i].arrival_time,
-               self->pid_records[i].actual_cpu_burst,
-               self->pid_records[i].start_time,
-               self->pid_records[i].completion_time,
+               self->pid_records[i].pid, self->pid_records[i].arrival_time, // id, arrival
+               self->pid_records[i].actual_cpu_burst, // burst
+               self->pid_records[i].start_time, // start
+               self->pid_records[i].completion_time, // finish
                self->pid_records[i].completion_time - self->pid_records[i].arrival_time,
-               self->pid_records[i].completion_time - self->pid_records[i].arrival_time,
+               self->pid_records[i].first_response_time,
                self->pid_records[i].first_response_time - self->pid_records[i].arrival_time);
     }
     printf("+----+---------+-------+-------+--------+--------+-------------+---------------+\n");

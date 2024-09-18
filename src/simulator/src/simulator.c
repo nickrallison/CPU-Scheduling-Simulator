@@ -43,7 +43,7 @@ simulator_t simulator_new(pid_records_t* pid_records,
 
     pid_records_t pid_completion_records =
             pid_records_new();
-    uint16_t jobs_remaining = pid_records_in_order.size;
+    uint32_t jobs_remaining = pid_records_in_order.size;
     uint32_t time_quantum_remaining = time_quantum;
     uint32_t* exp_time_remaining_estimate = malloc(51 * sizeof(uint32_t));
 

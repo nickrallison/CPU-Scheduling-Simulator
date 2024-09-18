@@ -8,16 +8,16 @@
 
 // process#, arrival time, time until first response, actual CPU burst>
 typedef struct pid_record_t {
-    uint16_t pid;
-    uint16_t arrival_time;
-    uint16_t time_until_first_response;
-    uint16_t actual_cpu_burst;
+    uint32_t pid;
+    uint32_t arrival_time;
+    uint32_t time_until_first_response;
+    uint32_t actual_cpu_burst;
     // ######
     uint32_t start_time;
     uint8_t has_started;
-    uint16_t running_cpu_burst;
-    uint16_t running_time_until_first_response;
-    uint16_t first_response_time;
+    uint32_t running_cpu_burst;
+    uint32_t running_time_until_first_response;
+    uint32_t first_response_time;
     uint32_t added_to_queue;
     uint32_t* exp_time_remaining_chart;
 
@@ -27,7 +27,7 @@ typedef struct pid_record_t {
 
 } pid_record_t;
 
-pid_record_t pid_record_new(uint16_t pid, uint16_t arrival_time, uint16_t time_until_first_response, uint16_t actual_cpu_burst);
+pid_record_t pid_record_new(uint32_t pid, uint32_t arrival_time, uint32_t time_until_first_response, uint32_t actual_cpu_burst);
 int pid_record_print(pid_record_t* self);
 int pid_record_compare_arrival_time(const void * a, const void * b);
 
@@ -47,16 +47,16 @@ pid_records_t create_pid_records();
 
 /// @brief A struct to store the completion records
 // typedef struct pid_completion_record_t {
-//     uint16_t pid;
-//     uint16_t arrival_time;
-//     uint16_t time_until_first_response;
-//     uint16_t actual_cpu_burst;
+//     uint32_t pid;
+//     uint32_t arrival_time;
+//     uint32_t time_until_first_response;
+//     uint32_t actual_cpu_burst;
 //     // ###################
 //     uint32_t completion_time;
 //
 // } pid_completion_record_t;
 
-// pid_completion_record_t pid_completion_record_new(uint16_t pid, uint16_t arrival_time, uint16_t time_until_first_response, uint16_t actual_cpu_burst, uint32_t completion_time);
+// pid_completion_record_t pid_completion_record_new(uint32_t pid, uint32_t arrival_time, uint32_t time_until_first_response, uint32_t actual_cpu_burst, uint32_t completion_time);
 // int pid_completion_record_print(pid_completion_record_t* self);
 
 // typedef struct pid_completion_records_t {
