@@ -114,6 +114,10 @@ int simulator_time_step(simulator_t *simulator) {
     // 4. run the process for one time step
     simulator->current_process_option.running_cpu_burst--;
     simulator->time_quantum_remaining--;
+    if (simulator->current_process_option.has_started == 0) {
+        simulator->current_process_option.start_time = simulator->current_time;
+        simulator->current_process_option.has_started = 1;
+    }
     if (simulator->current_process_option.running_time_until_first_response > 0) {
         simulator->current_process_option.running_time_until_first_response--;
     }

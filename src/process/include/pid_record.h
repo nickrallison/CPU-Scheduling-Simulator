@@ -13,6 +13,8 @@ typedef struct pid_record_t {
     uint16_t time_until_first_response;
     uint16_t actual_cpu_burst;
     // ######
+    uint32_t start_time;
+    uint8_t has_started;
     uint16_t running_cpu_burst;
     uint16_t running_time_until_first_response;
     uint16_t first_response_time;
