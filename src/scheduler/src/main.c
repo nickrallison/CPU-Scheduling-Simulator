@@ -38,8 +38,8 @@ int srt_comp(const void *first, const void *second) {
 
 int main(int argc, char *argv[]) {
   // Checking if the number of arguments is correct
-  if (argc != 2) {
-    fprintf(stderr, "Usage: %s [FCFS,SJF,RR,Priority,SRT] < [inputfile]\n",
+  if (argc != 2 && argc != 3) {
+    fprintf(stderr, "Usage: %s (FCFS,SJF,RR,Priority,SRT) [exp_weight | rr time quantum] < (inputfile)\n",
             argv[0]);
     return 1;
   }
@@ -73,6 +73,41 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "%s\n", scheduling_algorithms[i]);
     return 1;
   }
+
+  // if the algorithm chosen is RR, check if the time quantum is provided
+  int time_quantum = -1;
+  float exp_weight = -1;
+  if (algorithm_chosen == 2) {
+    if (argc != 3) {
+      fprintf(stderr, "RR requires a time quantum argument\n");
+      return 1;
+    }
+    time_quantum = atoi(argv[2]);
+    if (time_quantum <= 0) {
+      fprintf(stderr, "Time quantum must be a positive integer\n");
+      return 1;
+    }
+  }
+
+  // if the algorithm chosen is SRT, check if the exponential weight is provided
+
+  else if (algorithm_chosen == 4) {
+    if (argc != 3) {
+      fprintf(stderr, "SRT requires an exponential weight argument\n");
+      return 1;
+    }
+    exp_weight = atof(argv[2]);
+    if (exp_weight <= 0 || exp_weight >= 1) {
+      fprintf(stderr, "Exponential weight must be a float between 0 and 1\n");
+      return 1;
+    }
+  }
+  else if (argc == 3) {
+    fprintf(stderr, "The algorithm chosen does not require an argument\n");
+    return 1;
+  }
+
+
   pid_records_t pid_records = create_pid_records();
 
   simulator_t simulator;
@@ -81,11 +116,11 @@ int main(int argc, char *argv[]) {
   } else if (algorithm_chosen == 1) {
     simulator = simulator_new(&pid_records, &sjn_comp, 0, 0);
   } else if (algorithm_chosen == 2) {
-    simulator = simulator_new(&pid_records, &rr_comp, 3, 0);
+    simulator = simulator_new(&pid_records, &rr_comp, time_quantum, 0);
   } else if (algorithm_chosen == 3) {
     simulator = simulator_new(&pid_records, &priority_comp, 1, 0);
   } else if (algorithm_chosen == 4) {
-    simulator = simulator_new(&pid_records, &srt_comp, 1, 0.1);
+    simulator = simulator_new(&pid_records, &srt_comp, 1, exp_weight);
   } else {
     fprintf(stderr,"Simulator could not be created\n");
     exit(1);
