@@ -201,7 +201,31 @@ int pid_completion_records_print(pid_records_t *self) {
                self->pid_records[i].first_response_time - self->pid_records[i].arrival_time);
     }
     printf("+----+---------+-------+-------+--------+--------+-------------+---------------+\n");
+    printf("Average waiting time: %.2f ms\n", average_waiting_time(self));
+    printf("Average turnaround time: %.2f ms\n", average_turnaround_time(self));
+    printf("Average response time: %.2f ms\n", average_response_time(self));
     return 0;
+}
+float average_waiting_time(pid_records_t *self) {
+    float total_waiting_time = 0;
+    for (int i = 0; i < self->size; i++) {
+        total_waiting_time += self->pid_records[i].completion_time - self->pid_records[i].arrival_time;
+    }
+    return total_waiting_time / self->size;
+}
+float average_turnaround_time(pid_records_t *self) {
+    float total_turnaround_time = 0;
+    for (int i = 0; i < self->size; i++) {
+        total_turnaround_time += self->pid_records[i].completion_time - self->pid_records[i].arrival_time;
+    }
+    return total_turnaround_time / self->size;
+}
+float average_response_time(pid_records_t *self) {
+    float total_response_time = 0;
+    for (int i = 0; i < self->size; i++) {
+        total_response_time += self->pid_records[i].first_response_time - self->pid_records[i].arrival_time;
+    }
+    return total_response_time / self->size;
 }
 //
 // int pid_completion_records_sort_by(pid_completion_records_t *self,

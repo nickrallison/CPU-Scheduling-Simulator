@@ -67,7 +67,8 @@ pid_records_t create_pid_records();
 // pid_completion_records_t pid_completion_records_new();
 // int pid_completion_records_append(pid_completion_records_t* self, pid_completion_record_t pid_completion_record);
 int pid_completion_records_print(pid_records_t* self);
-// int pid_completion_records_sort_by(pid_completion_records_t* self, int (*compare)(const void *, const void *));
-
+float average_waiting_time(pid_records_t *self);
+float average_turnaround_time(pid_records_t *self);
+float average_response_time(pid_records_t *self);
 
 #endif // PID_RECORD_H
