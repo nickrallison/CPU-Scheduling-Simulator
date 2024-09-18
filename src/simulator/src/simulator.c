@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 // #### PROCESS QUEUE ####
 int process_queue_new(pid_records_t pid_records,
@@ -122,10 +123,13 @@ int simulator_time_step(simulator_t *simulator) {
         simulator->current_process_option.running_time_until_first_response--;
     }
 
+
     // 5. if the process responded, record the first response time
     if (simulator->has_current_process &&
-        simulator->current_process_option.running_time_until_first_response == 0) {
+        simulator->current_process_option.running_time_until_first_response == 0 && simulator->current_process_option.first_response_time == 0) {
         simulator->current_process_option.first_response_time = simulator->current_time + 1;
+        // printf("Time: %d, Burst Left: %d, Response Time: %d\n",
+        //        simulator->current_time + 1, simulator->current_process_option.running_cpu_burst, simulator->current_process_option.first_response_time);
     }
 
     // 6. if the process is done, add it to the completion records
