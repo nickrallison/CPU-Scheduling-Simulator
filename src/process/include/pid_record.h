@@ -16,6 +16,7 @@ typedef struct pid_record_t {
     uint16_t running_cpu_burst;
     uint16_t running_time_until_first_response;
     uint16_t first_response_time;
+    uint32_t added_to_queue;
     // ###################
     uint32_t completion_time;
 
@@ -60,7 +61,7 @@ pid_records_t create_pid_records();
 // } pid_completion_records_t;
 // pid_completion_records_t pid_completion_records_new();
 // int pid_completion_records_append(pid_completion_records_t* self, pid_completion_record_t pid_completion_record);
-// int pid_completion_records_print(const pid_completion_records_t* self);
+int pid_completion_records_print(pid_records_t* self);
 // int pid_completion_records_sort_by(pid_completion_records_t* self, int (*compare)(const void *, const void *));
 
 

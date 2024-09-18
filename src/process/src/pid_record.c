@@ -165,18 +165,19 @@ int pid_records_sort_by(pid_records_t *self,
 //     return 0;
 // }
 //
-// int pid_completion_records_print(const pid_completion_records_t *self) {
-//     for (int i = 0; i < self->size; i++) {
-//         printf("PID: %d, Arrival: %d, Time Until First Response: %d, Actual CPU "
-//                "Burst: %d, Completion Time: %d\n",
-//                self->completion_records[i].pid,
-//                self->completion_records[i].arrival_time,
-//                self->completion_records[i].time_until_first_response,
-//                self->completion_records[i].actual_cpu_burst,
-//                self->completion_records[i].completion_time);
-//     }
-//     return 0;
-// }
+int pid_completion_records_print(pid_records_t *self) {
+    for (int i = 0; i < self->size; i++) {
+        pid_record_t* pid_record = &self->pid_records[i];
+        printf("PID: %d, Arrival: %d, Time Until First Response: %d, Actual CPU "
+               "Burst: %d, Completion Time: %d\n",
+               pid_record->pid,
+               pid_record->arrival_time,
+               pid_record->first_response_time,
+               pid_record->actual_cpu_burst,
+               pid_record->completion_time);
+    }
+    return 0;
+}
 //
 // int pid_completion_records_sort_by(pid_completion_records_t *self,
 //                                    int (*compare)(const void *, const void *)) {

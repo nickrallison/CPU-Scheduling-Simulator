@@ -38,12 +38,13 @@ typedef struct simulator_t {
 
     pid_records_t pid_completion_records;
     uint16_t jobs_remaining;
+    uint32_t time_quantum_remaining;
 } simulator_t;
 
 simulator_t simulator_new(pid_records_t* pid_records,
-                          int (*compare)(const void *, const void *), uint8_t preemptive);
+                          int (*compare)(const void *, const void *), uint32_t time_quantum);
 
-int *simulator_run(simulator_t *simulator);
+pid_records_t *simulator_run(simulator_t *simulator);
 
 
 #endif // SIMULATOR_H
