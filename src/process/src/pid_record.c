@@ -186,24 +186,91 @@ int pid_records_sort_by(pid_records_t *self,
 //     return 0;
 // }
 //
+
+uint32_t min_uint32_t(uint32_t a, uint32_t b) {
+    return a < b ? a : b;
+}
+uint32_t max_uint32_t(uint32_t a, uint32_t b) {
+    return a > b ? a : b;
+}
+
 int pid_completion_records_print(pid_records_t *self) {
+    // allocate array of  51 pids, times 8 u32s
+    uint32_t* results = malloc(50 * 7 * sizeof(uint32_t));
+
+    // Here we see how to calculate these metrics for a whole process
+    //
+    // Arrive: Earliest arrival of all requests
+    // Burst: Sum of all individual bursts
+    // Start: Earliest start(might not be the same request as earliest arrive)
+    // Finish: The latest finish of all requests
+    // Wait: Sum of all individual wait times
+    // Turnaround: Process finish minus process arrive
+    // Response: Earliest response of any request, minus process arrival
+
+
+    for (int pid = 0; pid < 50; pid++) {
+        results[pid * 7] = pid + 1;
+        results[pid * 7 + 1] = UINT32_MAX;
+        results[pid * 7 + 2] = 0;
+        results[pid * 7 + 3] = UINT32_MAX;
+        results[pid * 7 + 4] = 0;
+        results[pid * 7 + 5] = 0;
+        results[pid * 7 + 6] = UINT32_MAX;
+    }
+
+    for (int i = 0; i < self->size; i++) {
+        uint32_t pid = self->pid_records[i].pid - 1;
+        uint32_t arrival = self->pid_records[i].arrival_time;
+        uint32_t burst = self->pid_records[i].actual_cpu_burst;
+        uint32_t start = self->pid_records[i].start_time;
+        uint32_t finish = self->pid_records[i].completion_time;
+        uint32_t wait = start - arrival;
+        uint32_t response_time = self->pid_records[i].first_response_time - arrival;
+
+        results[pid * 7 + 1] = min_uint32_t(results[pid * 7 + 1], arrival);
+        results[pid * 7 + 2] += burst;
+        results[pid * 7 + 3] = min_uint32_t(results[pid * 7 + 3], start);
+        results[pid * 7 + 4] = max_uint32_t(results[pid * 7 + 4], finish);
+        results[pid * 7 + 5] += wait;
+        results[pid * 7 + 6] = min_uint32_t(results[pid * 7 + 6], response_time);
+    }
+
     printf("+----+---------+--------+--------+--------+--------+-------------+---------------+\n");
     printf("| ID | Arrival | Burst  | Start  | Finish | Wait   | Turnaround  | Response Time |\n");
     printf("+----+---------+--------+--------+--------+--------+-------------+---------------+\n");
-    for (int i = 0; i < self->size; i++) {
-        printf("| %2d | %7d | %6d | %6d | %6d | %6d | %11d | %13d |\n",
-               self->pid_records[i].pid, self->pid_records[i].arrival_time, // id, arrival
-               self->pid_records[i].actual_cpu_burst, // burst
-               self->pid_records[i].start_time, // start
-               self->pid_records[i].completion_time, // finish
-               self->pid_records[i].completion_time - self->pid_records[i].arrival_time,
-               self->pid_records[i].first_response_time,
-               self->pid_records[i].first_response_time - self->pid_records[i].arrival_time);
+    for (int i = 0; i < 50; i++) {
+        uint32_t pid = results[i * 7];
+        uint32_t arrival = results[i * 7 + 1];
+        uint32_t burst = results[i * 7 + 2];
+        uint32_t start = results[i * 7 + 3];
+        uint32_t finish = results[i * 7 + 4];
+        uint32_t wait = results[i * 7 + 5];
+        uint32_t turnaround = finish - arrival;
+        uint32_t response_time = results[i * 7 + 6] - arrival;
+
+
+        printf("| %2d | %7d | %6d | %6d | %6d | %6d | %11d | %13d |\n", pid, arrival, burst, start, finish, wait, turnaround, response_time);
     }
+
+    uint32_t total_wait = 0;
+    uint32_t total_turnaround = 0;
+    uint32_t total_response = 0;
+
+    for (int i = 0; i < 50; i++) {
+        total_wait += results[i * 7 + 5];
+        total_turnaround += results[i * 7 + 4] - results[i * 7 + 1];
+        total_response += results[i * 7 + 6];
+    }
+
+    double average_wait = (double) total_wait / 50;
+    double average_turnaround = (double) total_turnaround / 50;
+    double average_response = (double) total_response / 50;
+
     printf("+----+---------+--------+--------+--------+--------+-------------+---------------+\n");
-    printf("Average waiting time: %.2f ms\n", average_waiting_time(self));
-    printf("Average turnaround time: %.2f ms\n", average_turnaround_time(self));
-    printf("Average response time: %.2f ms\n", average_response_time(self));
+    printf("Average waiting time: %.2f ms\n", average_wait);
+    printf("Average turnaround time: %.2f ms\n", average_turnaround);
+    printf("Average response time: %.2f ms\n", average_response);
     return 0;
 }
 float average_waiting_time(pid_records_t *self) {
