@@ -205,7 +205,7 @@ pid_results_t pid_results_new(uint32_t num_pids) {
 }
 
 pid_results_t pid_results_from_pid_records(pid_records_t *self) {
-    pid_results_t pid_results = pid_results_new(50);
+    pid_results_t pid_results = pid_results_new(51);
     for (int i = 0; i < self->size; i++) {
         pid_result_t pid_result = pid_result_from_pid_record(&self->pid_records[i]);
         pid_results_merge_in(&pid_results, pid_result);
