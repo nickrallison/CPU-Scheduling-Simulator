@@ -236,7 +236,7 @@ pid_results_t pid_results_new(uint32_t num_pids) {
     pid_result_t* pid_results_array = malloc(num_pids * sizeof(pid_result_t));
     pid_results_t pid_results = {num_pids, pid_results_array};
     for (int i = 0; i < num_pids; i++) {
-        pid_results.pid_results[i] = pid_result_new(i);
+        pid_results.pid_results[i] = pid_result_new(i+1);
     }
     return pid_results;
 }
