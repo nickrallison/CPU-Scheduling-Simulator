@@ -28,7 +28,7 @@ int rr_comp(const void *first, const void *second) {
 int priority_comp(const void *first, const void *second) {
   pid_record_t *first_pid_record = (pid_record_t *)first;
   pid_record_t *second_pid_record = (pid_record_t *)second;
-  return second_pid_record->pid - first_pid_record->pid;
+  return first_pid_record->pid - second_pid_record->pid;
 }
 
 int srt_comp(const void *first, const void *second) {
