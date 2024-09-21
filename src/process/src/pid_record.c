@@ -122,6 +122,43 @@ pid_records_t create_pid_records() {
     return pid_records;
 }
 
+pid_records_t create_pid_records_no_stdin(const char* input) {
+    uint32_t pid;
+    uint32_t arrival_time;
+    uint32_t time_until_first_response;
+    uint32_t actual_cpu_burst;
+
+    pid_records_t pid_records = pid_records_new();
+
+    // get rid of the first line
+    const char *current = input;
+    while (*current != '\n' && *current != '\0') {
+        current++;
+    }
+    if (*current == '\n') {
+        current++;
+    }
+
+
+    // Reads stdin line by line and creates a pid_record_t for each line
+    while (sscanf(current, "%d,%d,%d,%d\n", &pid, &arrival_time,
+                  &time_until_first_response, &actual_cpu_burst) == 4) {
+        pid_record_t pid_record = pid_record_new(
+            pid, arrival_time, time_until_first_response, actual_cpu_burst);
+        pid_records_append(&pid_records, pid_record);
+
+        // Move to the next line
+        while (*current != '\n' && *current != '\0') {
+            current++;
+        }
+        if (*current == '\n') {
+            current++;
+        }
+    }
+    return pid_records;
+
+}
+
 int pid_records_sort_by(pid_records_t *self,
                         int (*compare)(const void *, const void *)) {
     qsort(self->pid_records, self->size, sizeof(pid_record_t), compare);

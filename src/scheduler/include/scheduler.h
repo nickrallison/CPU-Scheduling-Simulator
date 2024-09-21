@@ -14,5 +14,6 @@ int priority_comp(const void *first, const void *second);
 int srt_comp(const void *first, const void *second);
 
 pid_results_t main_runner(int argc, char *argv[]);
+pid_results_t main_runner_no_stdin(int argc, char *argv[], char* input);
 
 #endif //SCHEDULER_H
