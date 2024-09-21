@@ -242,7 +242,7 @@ pid_results_t pid_results_new(uint32_t num_pids) {
 }
 
 pid_results_t pid_results_from_pid_records(pid_records_t *self) {
-    pid_results_t pid_results = pid_results_new(51);
+    pid_results_t pid_results = pid_results_new(50);
     for (int i = 0; i < self->size; i++) {
         pid_result_t pid_result = pid_result_from_pid_record(&self->pid_records[i]);
         pid_results_merge_in(&pid_results, pid_result);
@@ -259,18 +259,18 @@ int pid_results_merge_in(pid_results_t *self, pid_result_t pid_result) {
     uint32_t wait = pid_result.wait_time;
     uint32_t first_response_time = pid_result.first_response_time;
 
-    self->pid_results[pid].arrival_time = min_uint32_t(self->pid_results[pid].arrival_time, arrival);
-    self->pid_results[pid].burst += burst;
-    self->pid_results[pid].start_time = min_uint32_t(self->pid_results[pid].start_time, start);
-    self->pid_results[pid].finish_time = max_uint32_t(self->pid_results[pid].finish_time, finish);
-    self->pid_results[pid].wait_time += wait;
-    self->pid_results[pid].first_response_time = min_uint32_t(self->pid_results[pid].first_response_time, first_response_time);
+    self->pid_results[pid-1].arrival_time = min_uint32_t(self->pid_results[pid-1].arrival_time, arrival);
+    self->pid_results[pid-1].burst += burst;
+    self->pid_results[pid-1].start_time = min_uint32_t(self->pid_results[pid-1].start_time, start);
+    self->pid_results[pid-1].finish_time = max_uint32_t(self->pid_results[pid-1].finish_time, finish);
+    self->pid_results[pid-1].wait_time += wait;
+    self->pid_results[pid-1].first_response_time = min_uint32_t(self->pid_results[pid-1].first_response_time, first_response_time);
 
-    uint32_t turnaround = self->pid_results[pid].finish_time - self->pid_results[pid].arrival_time;
-    uint32_t response_time = self->pid_results[pid].first_response_time - self->pid_results[pid].arrival_time;
+    uint32_t turnaround = self->pid_results[pid-1].finish_time - self->pid_results[pid-1].arrival_time;
+    uint32_t response_time = self->pid_results[pid-1].first_response_time - self->pid_results[pid-1].arrival_time;
 
-    self->pid_results[pid].turnaround = turnaround;
-    self->pid_results[pid].response_time = response_time;
+    self->pid_results[pid-1].turnaround = turnaround;
+    self->pid_results[pid-1].response_time = response_time;
     return 0;
 }
 
