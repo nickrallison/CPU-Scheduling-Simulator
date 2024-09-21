@@ -129,6 +129,5 @@ pid_results_t main_runner(int argc, char *argv[]) {
 
   pid_records_t *pid_completion_records = simulator_run(&simulator);
   pid_results_t pid_results = pid_results_from_pid_records(pid_completion_records);
-  pid_results_print(&pid_results);
   return pid_results;
 }
