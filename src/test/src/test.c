@@ -39,7 +39,7 @@ int fcfs_test_1(int argc, char *argv[], char *input) {
     // for pid in pid_results compare to expected
     for (int index = 0; index < num_pids; index++) {
         uint32_t pid = pid_expected[index];
-        pid_result_t pid_result = pid_results.pid_results[pid];
+        pid_result_t pid_result = pid_results.pid_results[pid-1];
 
         uint32_t arrival_time = arrival_time_expected[index];
         uint32_t burst = burst_expected[index];
@@ -98,17 +98,17 @@ int sjf_test_1(int argc, char *argv[], char *input) {
     uint32_t pid_expected[] = {14, 24, 42};
     uint32_t arrival_time_expected[] = {16, 10, 0};
     uint32_t burst_expected[] = {158, 186, 78};
-    uint32_t start_time_expected[] = {264, 42, 0};
-    uint32_t finish_time_expected[] = {422, 228, 264};
-    uint32_t wait_time_expected[] = {248, 32, 213};
-    uint32_t first_response_time_expected[] = {416, 142, 15};
-    uint32_t turnaround_expected[] = {406, 218, 264};
-    uint32_t response_time_expected[] = {400, 132, 15};
+    uint32_t start_time_expected[] = {78, 236, 0};
+    uint32_t finish_time_expected[] = {236, 422, 78};
+    uint32_t wait_time_expected[] = {62, 226, 27};
+    uint32_t first_response_time_expected[] = {230, 336, 15};
+    uint32_t turnaround_expected[] = {220, 412, 78};
+    uint32_t response_time_expected[] = {214, 326,  15};
 
     // for pid in pid_results compare to expected
     for (int index = 0; index < num_pids; index++) {
         uint32_t pid = pid_expected[index];
-        pid_result_t pid_result = pid_results.pid_results[pid];
+        pid_result_t pid_result = pid_results.pid_results[pid-1];
 
         uint32_t arrival_time = arrival_time_expected[index];
         uint32_t burst = burst_expected[index];
