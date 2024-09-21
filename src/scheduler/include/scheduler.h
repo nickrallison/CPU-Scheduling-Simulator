@@ -5,7 +5,7 @@
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
 
-#include "process.h"
+#include "pid_record.h"
 
 int fcfs_comp(const void *first, const void *second);
 int sjn_comp(const void *first, const void *second);
