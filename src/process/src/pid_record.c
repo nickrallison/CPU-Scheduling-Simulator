@@ -226,14 +226,14 @@ int pid_completion_records_print(pid_records_t *self) {
         uint32_t start = self->pid_records[i].start_time;
         uint32_t finish = self->pid_records[i].completion_time;
         uint32_t wait = start - arrival;
-        uint32_t response_time = self->pid_records[i].first_response_time - arrival;
+        uint32_t first_response_time = self->pid_records[i].first_response_time;
 
         results[pid * 7 + 1] = min_uint32_t(results[pid * 7 + 1], arrival);
         results[pid * 7 + 2] += burst;
         results[pid * 7 + 3] = min_uint32_t(results[pid * 7 + 3], start);
         results[pid * 7 + 4] = max_uint32_t(results[pid * 7 + 4], finish);
         results[pid * 7 + 5] += wait;
-        results[pid * 7 + 6] = min_uint32_t(results[pid * 7 + 6], response_time);
+        results[pid * 7 + 6] = min_uint32_t(results[pid * 7 + 6], first_response_time);
     }
 
     printf("+----+---------+--------+--------+--------+--------+-------------+---------------+\n");
@@ -247,8 +247,11 @@ int pid_completion_records_print(pid_records_t *self) {
         uint32_t finish = results[i * 7 + 4];
         uint32_t wait = results[i * 7 + 5];
         uint32_t turnaround = finish - arrival;
-        uint32_t response_time = results[i * 7 + 6] - arrival;
-
+        uint32_t first_response_time = results[i * 7 + 6];
+        uint32_t response_time = first_response_time - arrival;
+        if (arrival == UINT32_MAX) {
+            continue;
+        }
 
         printf("| %2d | %7d | %6d | %6d | %6d | %6d | %11d | %13d |\n", pid, arrival, burst, start, finish, wait, turnaround, response_time);
     }
@@ -260,7 +263,7 @@ int pid_completion_records_print(pid_records_t *self) {
     for (int i = 0; i < 50; i++) {
         total_wait += results[i * 7 + 5];
         total_turnaround += results[i * 7 + 4] - results[i * 7 + 1];
-        total_response += results[i * 7 + 6];
+        total_response += results[i * 7 + 6] - results[i * 7 + 1];
     }
 
     double average_wait = (double) total_wait / 50;
