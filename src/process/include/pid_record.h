@@ -66,9 +66,37 @@ pid_records_t create_pid_records();
 // } pid_completion_records_t;
 // pid_completion_records_t pid_completion_records_new();
 // int pid_completion_records_append(pid_completion_records_t* self, pid_completion_record_t pid_completion_record);
-int pid_completion_records_print(pid_records_t* self);
+// int pid_completion_records_print(pid_records_t* self);
 float average_waiting_time(pid_records_t *self);
 float average_turnaround_time(pid_records_t *self);
 float average_response_time(pid_records_t *self);
+
+typedef struct pid_result_t {
+    uint32_t pid;
+    uint32_t arrival_time;
+    uint32_t burst;
+    uint32_t start_time;
+    uint32_t finish_time;
+    uint32_t wait_time;
+    uint32_t first_response_time;
+    uint32_t turnaround;
+    uint32_t response_time;
+} pid_result_t;
+
+pid_result_t pid_result_new(uint32_t pid);
+
+typedef struct pid_results_t {
+    uint32_t num_pids;
+    pid_result_t *pid_results;
+} pid_results_t;
+
+pid_results_t pid_results_new(uint32_t num_pids);
+pid_results_t pid_results_from_pid_records(pid_records_t *self);
+
+int pid_results_merge_in(pid_results_t *self, pid_result_t pid_result);
+int pid_results_print(pid_results_t *self);
+int pid_results_debug_print(pid_results_t *self);
+
+
 
 #endif // PID_RECORD_H

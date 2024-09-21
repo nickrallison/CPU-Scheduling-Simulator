@@ -29,8 +29,16 @@ project(
 
 # Adding something we can run - Output name matches target name
 
-add_executable(${PROJECT_NAME}
-  src/main.c
+add_library(${PROJECT_NAME}
+        src/scheduler.c
+        include/scheduler.h
+
+)
+
+# add include directories
+target_include_directories(${PROJECT_NAME}
+        PUBLIC
+        ${PROJECT_SOURCE_DIR}/include
 )
 
 # Make sure you link your targets with this command. It can also link libraries and

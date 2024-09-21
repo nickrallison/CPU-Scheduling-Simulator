@@ -1,10 +1,11 @@
-#include "pid_record.h"
 #include "simulator.h"
 
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "pid_record.h"
 
 int fcfs_comp(const void *first, const void *second) {
   pid_record_t *first_pid_record = (pid_record_t *)first;
@@ -36,12 +37,12 @@ int srt_comp(const void *first, const void *second) {
   return first_pid_record->exp_time_remaining_chart[first_pid_record->pid] - second_pid_record->exp_time_remaining_chart[second_pid_record->pid];
 }
 
-int main(int argc, char *argv[]) {
+pid_results_t* main_runner(int argc, char *argv[]) {
   // Checking if the number of arguments is correct
   if (argc != 2 && argc != 3) {
     fprintf(stderr, "Usage: %s (FCFS,SJF,RR,Priority,SRT) [exp_weight | rr time quantum] < (inputfile)\n",
             argv[0]);
-    return 1;
+    return NULL;
   }
 
   // Finding which scheduling algorithm was chosen
@@ -71,7 +72,7 @@ int main(int argc, char *argv[]) {
       i++;
     }
     fprintf(stderr, "%s\n", scheduling_algorithms[i]);
-    return 1;
+    return NULL;
   }
 
   // if the algorithm chosen is RR, check if the time quantum is provided
@@ -80,12 +81,12 @@ int main(int argc, char *argv[]) {
   if (algorithm_chosen == 2) {
     if (argc != 3) {
       fprintf(stderr, "RR requires a time quantum argument\n");
-      return 1;
+      return NULL;
     }
     time_quantum = atoi(argv[2]);
     if (time_quantum <= 0) {
       fprintf(stderr, "Time quantum must be a positive integer\n");
-      return 1;
+      return NULL;
     }
   }
 
@@ -94,17 +95,17 @@ int main(int argc, char *argv[]) {
   else if (algorithm_chosen == 4) {
     if (argc != 3) {
       fprintf(stderr, "SRT requires an exponential weight argument\n");
-      return 1;
+      return NULL;
     }
     exp_weight = atof(argv[2]);
     if (exp_weight <= 0 || exp_weight >= 1) {
       fprintf(stderr, "Exponential weight must be a float between 0 and 1\n");
-      return 1;
+      return NULL;
     }
   }
   else if (argc == 3) {
     fprintf(stderr, "The algorithm chosen does not require an argument\n");
-    return 1;
+    return NULL;
   }
 
 
@@ -127,6 +128,7 @@ int main(int argc, char *argv[]) {
   }
 
   pid_records_t *pid_completion_records = simulator_run(&simulator);
-  pid_completion_records_print(pid_completion_records);
-  return 0;
+  pid_results_t pid_results = pid_results_from_pid_records(pid_completion_records);
+  pid_results_print(&pid_results);
+  return &pid_results;
 }

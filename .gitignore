@@ -8,4 +8,7 @@ cmake-build-*
 
 # VSCode
 .vscode
-.idea
+
+# python
+venv
+.venv
