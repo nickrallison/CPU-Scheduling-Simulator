@@ -238,9 +238,9 @@ int pid_results_merge_in(pid_results_t *self, pid_result_t pid_result) {
 }
 
 int pid_results_print(pid_results_t *self) {
-    printf("+----+---------+--------+--------+--------+--------+-------------+---------------+\n");
-    printf("| ID | Arrival | Burst  | Start  | Finish | Wait   | Turnaround  | Response Time |\n");
-    printf("+----+---------+--------+--------+--------+--------+-------------+---------------+\n");
+    printf("+----+---------+--------+--------+--------+---------+-------------+---------------+\n");
+    printf("| ID | Arrival | Burst  | Start  | Finish | Wait    | Turnaround  | Response Time |\n");
+    printf("+----+---------+--------+--------+--------+---------+-------------+---------------+\n");
     for (int i = 0; i < self->num_pids; i++) {
 
         uint32_t pid = self->pid_results[i].pid;
@@ -255,7 +255,7 @@ int pid_results_print(pid_results_t *self) {
         if (arrival == UINT32_MAX) {
             continue;
         }
-        printf("| %2d | %7d | %6d | %6d | %6d | %6d | %11d | %13d |\n", pid, arrival, burst, start, finish, wait, first_response_time, turnaround, response_time);
+        printf("| %2d | %7d | %6d | %6d | %6d | %7d | %11d | %13d |\n", pid, arrival, burst, start, finish, wait, turnaround, response_time);
     }
 
     uint32_t total_wait = 0;
@@ -275,16 +275,16 @@ int pid_results_print(pid_results_t *self) {
     double average_turnaround = (double) total_turnaround / (double) self->num_pids;
     double average_response = (double) total_response / (double) self->num_pids;
 
-    printf("+----+---------+--------+--------+--------+--------+-------------+---------------+\n");
+    printf("+----+---------+--------+--------+--------+---------+-------------+---------------+\n");
     printf("Average waiting time: %.2f ms\n", average_wait);
     printf("Average turnaround time: %.2f ms\n", average_turnaround);
     printf("Average response time: %.2f ms\n", average_response);
 }
 
 int pid_results_debug_print(pid_results_t *self) {
-    printf("+----+---------+--------+--------+--------+--------+---------------------+-------------+---------------+\n");
-    printf("| ID | Arrival | Burst  | Start  | Finish | Wait   | First Response Time | Turnaround  | Response Time |\n");
-    printf("+----+---------+--------+--------+--------+--------+---------------------+-------------+---------------+\n");
+    printf("+----+---------+--------+--------+--------+---------+---------------------+-------------+---------------+\n");
+    printf("| ID | Arrival | Burst  | Start  | Finish | Wait    | First Response Time | Turnaround  | Response Time |\n");
+    printf("+----+---------+--------+--------+--------+---------+---------------------+-------------+---------------+\n");
     for (int i = 0; i < self->num_pids; i++) {
 
         uint32_t pid = self->pid_results[i].pid;
@@ -299,7 +299,7 @@ int pid_results_debug_print(pid_results_t *self) {
         if (arrival == UINT32_MAX) {
             continue;
         }
-        printf("| %2d | %7d | %6d | %6d | %6d | %6d | %19d | %11d | %13d |\n", pid, arrival, burst, start, finish, wait, first_response_time, turnaround, response_time);
+        printf("| %2d | %7d | %6d | %6d | %6d | %7d | %19d | %11d | %13d |\n", pid, arrival, burst, start, finish, wait, first_response_time, turnaround, response_time);
     }
 
     uint32_t total_wait = 0;
@@ -319,7 +319,7 @@ int pid_results_debug_print(pid_results_t *self) {
     double average_turnaround = (double) total_turnaround / (double) self->num_pids;
     double average_response = (double) total_response / (double) self->num_pids;
 
-    printf("+----+---------+--------+--------+--------+--------+---------------------+-------------+---------------+\n");
+    printf("+----+---------+--------+--------+--------+---------+---------------------+-------------+---------------+\n");
     printf("Average waiting time: %.2f ms\n", average_wait);
     printf("Average turnaround time: %.2f ms\n", average_turnaround);
     printf("Average response time: %.2f ms\n", average_response);
