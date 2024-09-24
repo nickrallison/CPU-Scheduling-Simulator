@@ -43,6 +43,9 @@ typedef struct simulator_t {
     uint32_t* exp_time_remaining_estimate;
     float alpha;
 
+    uint32_t* seq_pids;
+    uint32_t seq_pid_index;
+
 } simulator_t;
 
 simulator_t simulator_new(pid_records_t* pid_records,

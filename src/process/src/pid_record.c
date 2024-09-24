@@ -180,6 +180,35 @@ uint32_t max_uint32_t(uint32_t a, uint32_t b) {
 //     pid_results_print(&pid_results);
 //     return 0;
 // }
+//
+int pid_completion_records_print(pid_records_t *self) {
+    printf("seq = [");
+    for (int i = 0; i < self->size; i++) {
+        printf("%d", self->pid_records[i].pid);
+        if (i != self->size - 1) {
+            printf(", ");
+        }
+    }
+    printf("]\n");
+    printf("+----+---------+--------+--------+--------+--------+-------------+---------------+\n");
+    printf("| ID | Arrival | Burst  | Start  | Finish | Wait   | Turnaround  | Response Time |\n");
+    printf("+----+---------+--------+--------+--------+--------+-------------+---------------+\n");
+    for (int i = 0; i < self->size; i++) {
+        printf("| %2d | %7d | %6d | %6d | %6d | %6d | %11d | %13d |\n",
+               self->pid_records[i].pid, self->pid_records[i].arrival_time, // id, arrival
+               self->pid_records[i].actual_cpu_burst, // burst
+               self->pid_records[i].start_time, // start
+               self->pid_records[i].completion_time, // finish
+               self->pid_records[i].completion_time - self->pid_records[i].arrival_time,
+               self->pid_records[i].first_response_time,
+               self->pid_records[i].first_response_time - self->pid_records[i].arrival_time);
+    }
+    printf("+----+---------+--------+--------+--------+--------+-------------+---------------+\n");
+    printf("Average waiting time: %.2f ms\n", average_waiting_time(self));
+    printf("Average turnaround time: %.2f ms\n", average_turnaround_time(self));
+    printf("Average response time: %.2f ms\n", average_response_time(self));
+    return 0;
+}
 float average_waiting_time(pid_records_t *self) {
     float total_waiting_time = 0;
     for (int i = 0; i < self->size; i++) {

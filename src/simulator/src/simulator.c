@@ -48,6 +48,9 @@ simulator_t simulator_new(pid_records_t* pid_records,
     uint32_t time_quantum_remaining = time_quantum;
     uint32_t* exp_time_remaining_estimate = malloc(51 * sizeof(uint32_t));
 
+    uint32_t* seq_pids = malloc(pid_records->size * sizeof(uint32_t));
+    uint32_t seq_pid_index = 0;
+
     for (int i = 0; i < 51; i++) {
         exp_time_remaining_estimate[i] = 10;
     }
@@ -65,7 +68,9 @@ simulator_t simulator_new(pid_records_t* pid_records,
         jobs_remaining,
         time_quantum_remaining,
         exp_time_remaining_estimate,
-        alpha
+        alpha,
+        seq_pids,
+        seq_pid_index,
     };
     return simulator;
 }
@@ -139,6 +144,8 @@ int simulator_time_step(simulator_t *simulator) {
         simulator->has_current_process = 0;
         simulator->jobs_remaining--;
 
+        simulator->seq_pids[simulator->seq_pid_index] = simulator->current_process_option.pid;
+        simulator->seq_pid_index++;
 
         // tau_n+1 = alpha * t_n + (1 - alpha) * tau_n
 
