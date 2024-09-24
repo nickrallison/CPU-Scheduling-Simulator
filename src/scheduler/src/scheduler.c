@@ -22,8 +22,8 @@ int fcfs_comp_2(const void *first, const void *second) {
   if (first_pid_record->arrival_time > second_pid_record->arrival_time) return 1;
 
   // Secondary comparison
-  // if (first_pid_record->arrival_time > second_pid_record->arrival_time) return -1;
-  // if (first_pid_record->arrival_time < second_pid_record->arrival_time) return 1;
+  if (first_pid_record->pid < second_pid_record->pid) return -1;
+  if (first_pid_record->pid > second_pid_record->pid) return 1;
 
   return 0;
 }
@@ -50,9 +50,12 @@ int sjn_comp_2(const void *first, const void *second) {
   if (first_pid_record->actual_cpu_burst < second_pid_record->actual_cpu_burst) return -1;
   if (first_pid_record->actual_cpu_burst > second_pid_record->actual_cpu_burst) return 1;
 
-  // Secondary comparison
-  if (first_pid_record->arrival_time < second_pid_record->arrival_time) return -1;
-  if (first_pid_record->arrival_time > second_pid_record->arrival_time) return 1;
+  // // Secondary comparison
+  // if (first_pid_record->arrival_time < second_pid_record->arrival_time) return -1;
+  // if (first_pid_record->arrival_time > second_pid_record->arrival_time) return 1;
+  if (first_pid_record->pid < second_pid_record->pid) return -1;
+  if (first_pid_record->pid > second_pid_record->pid) return 1;
+
 
   return 0;
 }
@@ -72,8 +75,10 @@ int rr_comp_2(const void *first, const void *second) {
   if (first_pid_record->added_to_queue > second_pid_record->added_to_queue) return 1;
 
   // Secondary comparison
-  if (first_pid_record->arrival_time < second_pid_record->arrival_time) return -1;
-  if (first_pid_record->arrival_time > second_pid_record->arrival_time) return 1;
+  // if (first_pid_record->arrival_time < second_pid_record->arrival_time) return -1;
+  // if (first_pid_record->arrival_time > second_pid_record->arrival_time) return 1;
+  if (first_pid_record->pid < second_pid_record->pid) return -1;
+  if (first_pid_record->pid > second_pid_record->pid) return 1;
 
   return 0;
 }
@@ -93,8 +98,9 @@ int priority_comp_2(const void *first, const void *second) {
   if (second_pid_record->pid > first_pid_record->pid) return 1;
 
   // Secondary comparison
-  if (first_pid_record->arrival_time < second_pid_record->arrival_time) return -1;
-  if (first_pid_record->arrival_time > second_pid_record->arrival_time) return 1;
+  // if (first_pid_record->arrival_time < second_pid_record->arrival_time) return -1;
+  // if (first_pid_record->arrival_time > second_pid_record->arrival_time) return 1;
+
 
   return 0;
 }
@@ -114,8 +120,10 @@ int srt_comp_2(const void *first, const void *second) {
   if (first_pid_record->exp_time_remaining_chart[first_pid_record->pid] > second_pid_record->exp_time_remaining_chart[second_pid_record->pid]) return 1;
 
   // Secondary comparison
-  if (first_pid_record->arrival_time < second_pid_record->arrival_time) return -1;
-  if (first_pid_record->arrival_time > second_pid_record->arrival_time) return 1;
+  // if (first_pid_record->arrival_time < second_pid_record->arrival_time) return -1;
+  // if (first_pid_record->arrival_time > second_pid_record->arrival_time) return 1;
+  if (first_pid_record->pid < second_pid_record->pid) return -1;
+  if (first_pid_record->pid > second_pid_record->pid) return 1;
 
   return 0;
 }
