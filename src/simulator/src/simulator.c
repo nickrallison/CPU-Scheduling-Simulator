@@ -15,6 +15,7 @@ int process_queue_new(pid_records_t pid_records,
 int process_queue_add(process_queue_t *process_queue, pid_record_t process) {
     pid_records_append(&process_queue->processes_queue, process);
     pid_records_sort_by(&process_queue->processes_queue, process_queue->compare);
+
     return 0;
 }
 
@@ -170,5 +171,7 @@ pid_records_t *simulator_run(simulator_t *simulator) {
     while (simulator->jobs_remaining > 0) {
         simulator_time_step(simulator);
     }
+    simulator->pid_completion_records.seq_pids = simulator->seq_pids;
+    simulator->pid_completion_records.seq_pid_index = simulator->seq_pid_index;
     return &simulator->pid_completion_records;
 }

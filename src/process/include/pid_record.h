@@ -35,6 +35,9 @@ typedef struct pid_records_t {
     uint32_t size;
     uint32_t capacity;
     pid_record_t* pid_records;
+    // ####
+    uint32_t* seq_pids;
+    uint32_t seq_pid_index;
 } pid_records_t;
 
 pid_records_t pid_records_new();
@@ -67,6 +70,9 @@ pid_result_t pid_result_new(uint32_t pid);
 typedef struct pid_results_t {
     uint32_t num_pids;
     pid_result_t *pid_results;
+    // ####
+    uint32_t* seq_pids;
+    uint32_t seq_pid_index;
 } pid_results_t;
 
 pid_results_t pid_results_new(uint32_t num_pids);

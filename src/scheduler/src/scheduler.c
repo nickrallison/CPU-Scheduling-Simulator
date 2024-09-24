@@ -13,10 +13,48 @@ int fcfs_comp(const void *first, const void *second) {
   return first_pid_record->arrival_time - second_pid_record->arrival_time;
 }
 
-int sjn_comp(const void *first, const void *second) {
+int fcfs_comp_2(const void *first, const void *second) {
   pid_record_t *first_pid_record = (pid_record_t *)first;
   pid_record_t *second_pid_record = (pid_record_t *)second;
-  return first_pid_record->actual_cpu_burst- second_pid_record->actual_cpu_burst;
+
+  // Primary comparison
+  if (first_pid_record->arrival_time < second_pid_record->arrival_time) return -1;
+  if (first_pid_record->arrival_time > second_pid_record->arrival_time) return 1;
+
+  // Secondary comparison
+  // if (first_pid_record->arrival_time > second_pid_record->arrival_time) return -1;
+  // if (first_pid_record->arrival_time < second_pid_record->arrival_time) return 1;
+
+  return 0;
+}
+
+// int sjn_comp(const void *first, const void *second) {
+//   pid_record_t *first_pid_record = (pid_record_t *)first;
+//   pid_record_t *second_pid_record = (pid_record_t *)second;
+//   return first_pid_record->actual_cpu_burst- second_pid_record->actual_cpu_burst;
+// }
+
+int sjn_comp_2(const void *first, const void *second) {
+  pid_record_t *first_pid_record = (pid_record_t *)first;
+  pid_record_t *second_pid_record = (pid_record_t *)second;
+
+  // if (first_pid_record->actual_cpu_burst == second_pid_record->actual_cpu_burst)
+  // {
+  //   if (first_pid_record->pid == 4 && second_pid_record->pid == 47 || first_pid_record->pid == 47 && second_pid_record->pid == 4)
+  //   {
+  //         printf("first_pid_record->actual_cpu_burst: %d\n", first_pid_record->actual_cpu_burst);
+  //   }
+  // };
+
+  // Primary comparison
+  if (first_pid_record->actual_cpu_burst < second_pid_record->actual_cpu_burst) return -1;
+  if (first_pid_record->actual_cpu_burst > second_pid_record->actual_cpu_burst) return 1;
+
+  // Secondary comparison
+  if (first_pid_record->arrival_time < second_pid_record->arrival_time) return -1;
+  if (first_pid_record->arrival_time > second_pid_record->arrival_time) return 1;
+
+  return 0;
 }
 
 int rr_comp(const void *first, const void *second) {
@@ -25,10 +63,40 @@ int rr_comp(const void *first, const void *second) {
   return first_pid_record->added_to_queue - second_pid_record->added_to_queue;
 }
 
+int rr_comp_2(const void *first, const void *second) {
+  pid_record_t *first_pid_record = (pid_record_t *)first;
+  pid_record_t *second_pid_record = (pid_record_t *)second;
+
+  // Primary comparison
+  if (first_pid_record->added_to_queue < second_pid_record->added_to_queue) return -1;
+  if (first_pid_record->added_to_queue > second_pid_record->added_to_queue) return 1;
+
+  // Secondary comparison
+  if (first_pid_record->arrival_time < second_pid_record->arrival_time) return -1;
+  if (first_pid_record->arrival_time > second_pid_record->arrival_time) return 1;
+
+  return 0;
+}
+
 int priority_comp(const void *first, const void *second) {
   pid_record_t *first_pid_record = (pid_record_t *)first;
   pid_record_t *second_pid_record = (pid_record_t *)second;
-  return first_pid_record->pid - second_pid_record->pid;
+  return second_pid_record->pid - first_pid_record->pid;
+}
+
+int priority_comp_2(const void *first, const void *second) {
+  pid_record_t *first_pid_record = (pid_record_t *)first;
+  pid_record_t *second_pid_record = (pid_record_t *)second;
+
+  // Primary comparison
+  if (second_pid_record->pid < first_pid_record->pid) return -1;
+  if (second_pid_record->pid > first_pid_record->pid) return 1;
+
+  // Secondary comparison
+  if (first_pid_record->arrival_time < second_pid_record->arrival_time) return -1;
+  if (first_pid_record->arrival_time > second_pid_record->arrival_time) return 1;
+
+  return 0;
 }
 
 int srt_comp(const void *first, const void *second) {
@@ -37,6 +105,20 @@ int srt_comp(const void *first, const void *second) {
   return first_pid_record->exp_time_remaining_chart[first_pid_record->pid] - second_pid_record->exp_time_remaining_chart[second_pid_record->pid];
 }
 
+int srt_comp_2(const void *first, const void *second) {
+  pid_record_t *first_pid_record = (pid_record_t *)first;
+  pid_record_t *second_pid_record = (pid_record_t *)second;
+
+  // Primary comparison
+  if (first_pid_record->exp_time_remaining_chart[first_pid_record->pid] < second_pid_record->exp_time_remaining_chart[second_pid_record->pid]) return -1;
+  if (first_pid_record->exp_time_remaining_chart[first_pid_record->pid] > second_pid_record->exp_time_remaining_chart[second_pid_record->pid]) return 1;
+
+  // Secondary comparison
+  if (first_pid_record->arrival_time < second_pid_record->arrival_time) return -1;
+  if (first_pid_record->arrival_time > second_pid_record->arrival_time) return 1;
+
+  return 0;
+}
 pid_results_t main_runner(int argc, char *argv[]) {
   // Checking if the number of arguments is correct
   if (argc != 2 && argc != 3) {
@@ -113,15 +195,15 @@ pid_results_t main_runner(int argc, char *argv[]) {
 
   simulator_t simulator;
   if (algorithm_chosen == 0) {
-    simulator = simulator_new(&pid_records, &fcfs_comp, 0, 0);
+    simulator = simulator_new(&pid_records, &fcfs_comp_2, 0, 0);
   } else if (algorithm_chosen == 1) {
-    simulator = simulator_new(&pid_records, &sjn_comp, 0, 0);
+    simulator = simulator_new(&pid_records, &sjn_comp_2, 0, 0);
   } else if (algorithm_chosen == 2) {
-    simulator = simulator_new(&pid_records, &rr_comp, time_quantum, 0);
+    simulator = simulator_new(&pid_records, &rr_comp_2, time_quantum, 0);
   } else if (algorithm_chosen == 3) {
-    simulator = simulator_new(&pid_records, &priority_comp, 0, 0);
+    simulator = simulator_new(&pid_records, &priority_comp_2, 0, 0);
   } else if (algorithm_chosen == 4) {
-    simulator = simulator_new(&pid_records, &srt_comp, 1, exp_weight);
+    simulator = simulator_new(&pid_records, &srt_comp_2, 1, exp_weight);
   } else {
     fprintf(stderr,"Simulator could not be created\n");
     exit(1);
@@ -208,15 +290,15 @@ pid_results_t main_runner_no_stdin(int argc, char *argv[], char *input) {
 
   simulator_t simulator;
   if (algorithm_chosen == 0) {
-    simulator = simulator_new(&pid_records, &fcfs_comp, 0, 0);
+    simulator = simulator_new(&pid_records, &fcfs_comp_2, 0, 0);
   } else if (algorithm_chosen == 1) {
-    simulator = simulator_new(&pid_records, &sjn_comp, 0, 0);
+    simulator = simulator_new(&pid_records, &sjn_comp_2, 0, 0);
   } else if (algorithm_chosen == 2) {
-    simulator = simulator_new(&pid_records, &rr_comp, time_quantum, 0);
+    simulator = simulator_new(&pid_records, &rr_comp_2, time_quantum, 0);
   } else if (algorithm_chosen == 3) {
-    simulator = simulator_new(&pid_records, &priority_comp, 0, 0);
+    simulator = simulator_new(&pid_records, &priority_comp_2, 0, 0);
   } else if (algorithm_chosen == 4) {
-    simulator = simulator_new(&pid_records, &srt_comp, 1, exp_weight);
+    simulator = simulator_new(&pid_records, &srt_comp_2, 1, exp_weight);
   } else {
     fprintf(stderr,"Simulator could not be created\n");
     exit(1);
