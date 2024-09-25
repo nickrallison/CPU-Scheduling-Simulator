@@ -73,6 +73,9 @@ simulator_t simulator_new(pid_records_t* pid_records,
         seq_pids,
         seq_pid_index,
     };
+    for (int i = 0; i < pid_records_in_order.size; i++) {
+        simulator.pid_records_in_order.pid_records[i].current_time = &simulator.current_time;
+    }
     return simulator;
 }
 
@@ -103,8 +106,10 @@ int simulator_time_step(simulator_t *simulator) {
     if (simulator->time_quantum && simulator->has_current_process &&
         simulator->current_process_option.running_cpu_burst > 0 && simulator->time_quantum_remaining == 0) {
         simulator->current_process_option.added_to_queue = simulator->current_time;
+        simulator->current_process_option.last_preempted = simulator->current_time;
         process_queue_add(&simulator->process_queue,
                           simulator->current_process_option);
+
         simulator->has_current_process = 0;
         simulator->time_quantum_remaining = simulator->time_quantum;
     }
@@ -115,6 +120,7 @@ int simulator_time_step(simulator_t *simulator) {
             simulator->current_process_option =
                     process_queue_pop(&simulator->process_queue);
             simulator->has_current_process = 1;
+            simulator->time_quantum_remaining = simulator->time_quantum;
         }
     }
 

@@ -20,6 +20,8 @@ typedef struct pid_record_t {
     uint32_t first_response_time;
     uint32_t added_to_queue;
     uint32_t* exp_time_remaining_chart;
+    uint32_t last_preempted;
+    uint32_t* current_time;
 
     // ###################
     uint32_t completion_time;

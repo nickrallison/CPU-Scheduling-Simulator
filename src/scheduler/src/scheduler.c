@@ -75,10 +75,12 @@ int rr_comp_2(const void *first, const void *second) {
   if (first_pid_record->added_to_queue > second_pid_record->added_to_queue) return 1;
 
   // Secondary comparison
-  // if (first_pid_record->arrival_time < second_pid_record->arrival_time) return -1;
-  // if (first_pid_record->arrival_time > second_pid_record->arrival_time) return 1;
-  if (first_pid_record->pid < second_pid_record->pid) return -1;
-  if (first_pid_record->pid > second_pid_record->pid) return 1;
+  // if (first_pid_record->pid < second_pid_record->pid) return -1;
+  // if (first_pid_record->pid > second_pid_record->pid) return 1;
+
+  // if existing process was just preempted, it should be sorted first
+  if (first_pid_record->last_preempted == *first_pid_record->current_time) return 1;
+  if (second_pid_record->last_preempted == *second_pid_record->current_time) return -1;
 
   return 0;
 }
