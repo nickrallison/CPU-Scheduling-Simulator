@@ -290,7 +290,8 @@ int pid_results_merge_in(pid_results_t *self, pid_result_t pid_result) {
     uint32_t burst = pid_result.burst;
     uint32_t start = pid_result.start_time;
     uint32_t finish = pid_result.finish_time;
-    uint32_t wait = pid_result.wait_time;
+    // uint32_t wait = pid_result.wait_time;
+    uint32_t wait = finish - arrival - burst;
     uint32_t first_response_time = pid_result.first_response_time;
 
     self->pid_results[pid-1].arrival_time = min_uint32_t(self->pid_results[pid-1].arrival_time, arrival);
