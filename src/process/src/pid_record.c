@@ -351,9 +351,9 @@ int pid_results_print(pid_results_t *self) {
         total_response += self->pid_results[i].first_response_time - self->pid_results[i].arrival_time;
     }
 
-    double average_wait = (double) total_wait / (double) self->num_pids * 50.0 / 3.0;
-    double average_turnaround = (double) total_turnaround / (double) self->num_pids * 50.0 / 3.0;
-    double average_response = (double) total_response / (double) self->num_pids * 50.0 / 3.0;
+    double average_wait = (double) total_wait / (double) self->num_pids;
+    double average_turnaround = (double) total_turnaround / (double) self->num_pids;
+    double average_response = (double) total_response / (double) self->num_pids;
 
     printf("+----+---------+--------+--------+--------+---------+-------------+---------------+\n");
     printf("Average waiting time: %.2f ms\n", average_wait);
@@ -404,9 +404,9 @@ int pid_results_debug_print(pid_results_t *self) {
         total_response += self->pid_results[i].first_response_time - self->pid_results[i].arrival_time;
     }
 
-    double average_wait = (double) total_wait / (double) self->num_pids * 50.0 / 3.0;
-    double average_turnaround = (double) total_turnaround / (double) self->num_pids * 50.0 / 3.0;
-    double average_response = (double) total_response / (double) self->num_pids * 50.0 / 3.0;
+    double average_wait = (double) total_wait / (double) self->num_pids;
+    double average_turnaround = (double) total_turnaround / (double) self->num_pids;
+    double average_response = (double) total_response / (double) self->num_pids;
 
     printf("+----+---------+--------+--------+--------+---------+---------------------+-------------+---------------+\n");
     printf("Average waiting time: %.2f ms\n", average_wait);
