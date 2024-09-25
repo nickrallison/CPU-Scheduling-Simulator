@@ -40,7 +40,7 @@ typedef struct simulator_t {
     uint32_t jobs_remaining;
     uint32_t time_quantum_remaining;
 
-    uint32_t* exp_time_remaining_estimate;
+    float* exp_time_remaining_estimate;
     float alpha;
 
     uint32_t* seq_pids;

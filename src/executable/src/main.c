@@ -1,7 +1,4 @@
 
-
-#include <stdio.h>
-
 #include "pid_record.h"
 #include "scheduler.h"
 

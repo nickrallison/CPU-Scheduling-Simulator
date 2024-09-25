@@ -107,7 +107,7 @@ int priority_comp_2(const void *first, const void *second) {
   return 0;
 }
 
-int srt_comp(const void *first, const void *second) {
+float srt_comp(const void *first, const void *second) {
   pid_record_t *first_pid_record = (pid_record_t *)first;
   pid_record_t *second_pid_record = (pid_record_t *)second;
   return first_pid_record->exp_time_remaining_chart[first_pid_record->pid] - second_pid_record->exp_time_remaining_chart[second_pid_record->pid];
@@ -118,8 +118,10 @@ int srt_comp_2(const void *first, const void *second) {
   pid_record_t *second_pid_record = (pid_record_t *)second;
 
   // Primary comparison
-  if (first_pid_record->exp_time_remaining_chart[first_pid_record->pid] < second_pid_record->exp_time_remaining_chart[second_pid_record->pid]) return -1;
-  if (first_pid_record->exp_time_remaining_chart[first_pid_record->pid] > second_pid_record->exp_time_remaining_chart[second_pid_record->pid]) return 1;
+  float val1 = first_pid_record->exp_time_remaining_chart[first_pid_record->pid];
+  float val2 = second_pid_record->exp_time_remaining_chart[second_pid_record->pid];
+  if (val1 < val2) return -1;
+  if (val1 > val2) return 1;
 
   // Secondary comparison
   // if (first_pid_record->arrival_time < second_pid_record->arrival_time) return -1;

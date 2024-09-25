@@ -47,7 +47,7 @@ simulator_t simulator_new(pid_records_t* pid_records,
             pid_records_new();
     uint32_t jobs_remaining = pid_records_in_order.size;
     uint32_t time_quantum_remaining = time_quantum;
-    uint32_t* exp_time_remaining_estimate = malloc(51 * sizeof(uint32_t));
+    float* exp_time_remaining_estimate = malloc(51 * sizeof(float));
 
     uint32_t* seq_pids = malloc(pid_records->size * sizeof(uint32_t));
     uint32_t seq_pid_index = 0;
@@ -56,9 +56,9 @@ simulator_t simulator_new(pid_records_t* pid_records,
         exp_time_remaining_estimate[i] = 10;
     }
 
-    for (int i = 0; i < pid_records_in_order.size; i++) {
-        pid_records_in_order.pid_records[i].exp_time_remaining_chart = exp_time_remaining_estimate;
-    }
+    // for (int i = 0; i < pid_records_in_order.size; i++) {
+    //     pid_records_in_order.pid_records[i].exp_time_remaining_chart = exp_time_remaining_estimate;
+    // }
 
     simulator_t simulator = {
         time_quantum,
@@ -74,6 +74,7 @@ simulator_t simulator_new(pid_records_t* pid_records,
         seq_pid_index,
     };
     for (int i = 0; i < pid_records_in_order.size; i++) {
+        simulator.pid_records_in_order.pid_records[i].exp_time_remaining_chart = simulator.exp_time_remaining_estimate;
         simulator.pid_records_in_order.pid_records[i].current_time = &simulator.current_time;
     }
     return simulator;
@@ -160,7 +161,7 @@ int simulator_time_step(simulator_t *simulator) {
         // tau_n = simulator->exp_time_remaining_estimate
         // t_n = simulator->current_process_option.actual_cpu_burst
         simulator->current_process_option.exp_time_remaining_chart[simulator->current_process_option.pid] =
-                simulator->alpha * simulator->current_process_option.actual_cpu_burst +
+                simulator->alpha * (float) simulator->current_process_option.actual_cpu_burst +
                 (1 - simulator->alpha) * simulator->current_process_option.exp_time_remaining_chart[simulator->current_process_option.pid];
 
         pid_records_append(&simulator->pid_completion_records,
