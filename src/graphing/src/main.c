@@ -38,9 +38,20 @@ char* read_file(char* filename) {
 
 int main(int argc, char *argv[]) {
     char* input = read_file(argv[1]);
-    int local_argc = 2;
-    char* local_argv[] = {"./scheduler", "FCFS"};
-    pid_results_t pid_results = main_runner_no_stdin(local_argc, local_argv, input);
+    int local_argc = 3;
+    int rr_min = 1;
+    int rr_max = 100;
+    for (int i = rr_min; i <= rr_max; i++) {
+        // int to string
+        char str[12];
+        sprintf(str, "%d", i);
+        char* local_argv[] = {"./scheduler", "RR", str};
+        pid_results_t pid_results = main_runner_no_stdin(local_argc, local_argv, input);
+        pid_results_debug_print(&pid_results);
+    }
+
+    // char* local_argv[] = {"./scheduler", "RR", "10"};
+    // pid_results_t pid_results = main_runner_no_stdin(local_argc, local_argv, input);
 
     printf("do thing with pid_results\n");
 }
