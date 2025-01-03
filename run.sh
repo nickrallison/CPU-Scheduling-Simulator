@@ -20,4 +20,4 @@ else
     make
 fi
 popd
-./build/src/scheduler/scheduler FCFS < cpsca1input.csv
+./build/src/scheduler/scheduler FCFS < input.csv
