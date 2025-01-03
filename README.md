@@ -77,3 +77,7 @@ The simulator outputs the following metrics for each process:
 
 ## Testing
 The project includes a testing framework to validate the correctness of the scheduling algorithms. Test cases are defined in `test.c` and can be run using the `./test` executable.
+
+## Acknowledgments
+- This project was developed as part of a course assignment for CPSC 457.
+- Special thanks to the teaching staff for their guidance and support.
